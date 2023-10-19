@@ -55,7 +55,7 @@ public class Patient {
 	@Column(name="wallet")
 	private Double wallet;
 	
-	@NotEmpty
+	@NotEmpty(message = "Banking account must not be empty")
 	@Column(name="banking_account")
 	private String bankingAccount;
 
