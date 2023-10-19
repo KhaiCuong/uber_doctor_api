@@ -20,61 +20,81 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Patient;
 import com.example.demo.repository.PatientRepository;
+import com.example.demo.service.PatientService;
 
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/patients")
 public class PatientController {
-    private final PatientRepository patientRepository;
-
     @Autowired
-    public PatientController(PatientRepository patientRepository) {
-        this.patientRepository = patientRepository;
-    }
+    private PatientService patientService;
 
     @GetMapping
-    public List<Patient> getAllPatients() {
-        return patientRepository.findAll();
+    public ResponseEntity<List<Patient>> getAllPatients() {
+        try {
+            List<Patient> patients = patientService.getAllPatients();
+            return ResponseEntity.ok(patients);
+        } catch (Exception ex) {
+            
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Patient> getPatientById(@PathVariable Integer id) {
-        Optional<Patient> patient = patientRepository.findById(id);
-        return patient.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        try {
+            Patient patient = patientService.getPatientById(id);
+            if (patient == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(patient);
+        } catch (Exception ex) {
+           
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PostMapping
-    public ResponseEntity<?> createPatient(@Valid @RequestBody Patient patient, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+    public ResponseEntity<Patient> createPatient(@RequestBody Patient patient) {
+        try {
+            Patient createdPatient = patientService.createPatient(patient);
+            return ResponseEntity.ok(createdPatient);
+        } catch (Exception ex) {
            
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            List<String> errorMessages = errors.stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessages);
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        
-        Patient createdPatient = patientRepository.save(patient);
-        return ResponseEntity.ok(createdPatient);
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Patient> updatePatient(@PathVariable Integer id, @RequestBody Patient patient) {
-        if (!patientRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+        try {
+            Patient updatedPatient = patientService.updatePatient(id, patient);
+            if (updatedPatient == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(updatedPatient);
+        } catch (Exception ex) {
+           
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        patient.setId(id);
-        return ResponseEntity.ok(patientRepository.save(patient));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePatient(@PathVariable Integer id) {
-        if (!patientRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+        try {
+            patientService.deletePatient(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception ex) {
+           
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        patientRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 }
+
 

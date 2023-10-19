@@ -10,22 +10,31 @@ import com.example.demo.repository.PatientRepository;
 
 @Service
 public class PatientService {
-    private final PatientRepository patientRepository;
-
     @Autowired
-    public PatientService(PatientRepository patientRepository) {
-        this.patientRepository = patientRepository;
-    }
+    private PatientRepository patientRepository;
 
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();
+    }
+
+    public Patient getPatientById(Integer id) {
+        return patientRepository.findById(id).orElse(null);
     }
 
     public Patient createPatient(Patient patient) {
         return patientRepository.save(patient);
     }
 
-    
+    public Patient updatePatient(Integer id, Patient patient) {
+        if (patientRepository.existsById(id)) {
+            patient.setId(id);
+            return patientRepository.save(patient);
+        }
+        return null;
+    }
 
+    public void deletePatient(Integer id) {
+        patientRepository.deleteById(id);
+    }
 }
 
