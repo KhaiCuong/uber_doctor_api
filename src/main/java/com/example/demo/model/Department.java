@@ -49,6 +49,14 @@ public class Department {
     )
     private List<Doctor> doctors;
 	
+	@ManyToMany
+    @JoinTable(
+        name = "department_pathologycal", 
+        joinColumns = @JoinColumn(name = "department_id"), 
+        inverseJoinColumns = @JoinColumn(name = "pathologycal_id") 
+    )
+    private List<Pathologycal> pathologycal;
+	
 	public Department(Integer id, @NotEmpty String departmentName, @NotEmpty String description, @NotNull String status,
 			@NotEmpty Integer number_of_Doctors, List<Doctor> doctors) {
 		super();
@@ -74,6 +82,14 @@ public class Department {
 
 	public void setDepartmentName(String departmentName) {
 		this.departmentName = departmentName;
+	}
+
+	public List<Pathologycal> getPathologycal() {
+		return pathologycal;
+	}
+
+	public void setPathologycal(List<Pathologycal> pathologycal) {
+		this.pathologycal = pathologycal;
 	}
 
 	public String getDescription() {
@@ -106,6 +122,11 @@ public class Department {
 
 	public void setDoctors(List<Doctor> doctors) {
 		this.doctors = doctors;
+	}
+
+	public Department(List<Pathologycal> pathologycal) {
+		super();
+		this.pathologycal = pathologycal;
 	}
 
 	

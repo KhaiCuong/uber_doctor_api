@@ -5,8 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
-
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
@@ -35,7 +34,8 @@ public class Payment {
 	@Column(name = "patient_name")
 	private String patientName;
 	
-	@OneToOne()
-	private Booking booking;
+	@OneToOne
+    @JoinColumn(name = "booking_id", referencedColumnName = "id")
+    private Booking booking;
 	
 }

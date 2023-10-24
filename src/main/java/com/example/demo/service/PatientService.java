@@ -33,8 +33,9 @@ public class PatientService {
         return null;
     }
 
-    public void deletePatient(Integer id) {
+    public boolean deletePatient(Integer id) {
         patientRepository.deleteById(id);
+		return false;
     }
 }
 
