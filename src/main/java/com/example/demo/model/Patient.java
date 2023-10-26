@@ -1,10 +1,13 @@
 package com.example.demo.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -58,6 +61,24 @@ public class Patient {
 	@NotEmpty(message = "Banking account must not be empty")
 	@Column(name="banking_account")
 	private String bankingAccount;
+	
+	@OneToOne
+	@JoinColumn(name = "medical_record_id", referencedColumnName = "id")
+	private MedicalRecord medicalRecord;
+
+	
+	public Patient(MedicalRecord medicalRecord) {
+		super();
+		this.medicalRecord = medicalRecord;
+	}
+
+	public MedicalRecord getMedicalRecord() {
+		return medicalRecord;
+	}
+
+	public void setMedicalRecord(MedicalRecord medicalRecord) {
+		this.medicalRecord = medicalRecord;
+	}
 
 	public Integer getId() {
 		return id;

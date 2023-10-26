@@ -2,17 +2,17 @@ package com.example.demo.model;
 
 
 
-import jakarta.persistence.ManyToOne;
+
 
 import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -83,7 +83,12 @@ public class Doctor {
 	@Column(name="banking_account")
 	private String bankingAccount;
 	
-	@ManyToMany(mappedBy = "doctors", fetch = FetchType.LAZY)
+	@ManyToMany
+    @JoinTable(
+        name = "department_doctor", 
+        joinColumns = @JoinColumn(name = "doctor_id"),
+        inverseJoinColumns = @JoinColumn(name = "department_id") 
+    )
     private List<Department> departments;
 	
 	public Doctor() {

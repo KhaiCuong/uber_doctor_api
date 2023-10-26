@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Patient;
 import com.example.demo.repository.PatientRepository;
+import com.example.demo.response.CustomStatusResponse;
 import com.example.demo.service.PatientService;
 
 import jakarta.validation.Valid;
@@ -27,72 +28,72 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/patients")
 public class PatientController {
+
     @Autowired
     private PatientService patientService;
+    
+    @Autowired
+    private CustomStatusResponse customStatusResponse;
 
     @GetMapping
-    public ResponseEntity<List<Patient>> getAllPatients() {
+    public ResponseEntity<CustomStatusResponse<List<Patient>>> getAllPatients() {
         try {
             List<Patient> patients = patientService.getAllPatients();
-            return ResponseEntity.ok(patients);
-        } catch (Exception ex) {
-            
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            if (patients.isEmpty()) {
+                return customStatusResponse.NOTFOUND404("No patients found");
+            }
+            return customStatusResponse.OK200("Patients found", patients);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> getPatientById(@PathVariable Integer id) {
+    public ResponseEntity<CustomStatusResponse<Patient>> getPatientById(@PathVariable Integer id) {
         try {
             Patient patient = patientService.getPatientById(id);
             if (patient == null) {
-                return ResponseEntity.notFound().build();
+                return customStatusResponse.NOTFOUND404("Patient not found");
             }
-            return ResponseEntity.ok(patient);
-        } catch (Exception ex) {
-           
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return customStatusResponse.OK200("Patient found", patient);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
 
     @PostMapping
-    public ResponseEntity<Patient> createPatient(@RequestBody Patient patient) {
+    public ResponseEntity<CustomStatusResponse<Patient>> createPatient(@RequestBody Patient patient) {
         try {
             Patient createdPatient = patientService.createPatient(patient);
-            return ResponseEntity.ok(createdPatient);
-        } catch (Exception ex) {
-           
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return customStatusResponse.CREATED201("Patient created", createdPatient);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Patient> updatePatient(@PathVariable Integer id, @RequestBody Patient patient) {
+    public ResponseEntity<CustomStatusResponse<Patient>> updatePatient(@PathVariable Integer id, @RequestBody Patient patient) {
         try {
             Patient updatedPatient = patientService.updatePatient(id, patient);
             if (updatedPatient == null) {
-                return ResponseEntity.notFound().build();
+                return customStatusResponse.NOTFOUND404("Patient not found");
             }
-            return ResponseEntity.ok(updatedPatient);
-        } catch (Exception ex) {
-           
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return customStatusResponse.OK200("Patient updated", updatedPatient);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePatient(@PathVariable Integer id) {
+    public ResponseEntity<CustomStatusResponse<?>> deletePatient(@PathVariable Integer id) {
         try {
-            patientService.deletePatient(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception ex) {
-           
-            ex.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            if (patientService.deletePatient(id)) {
+                return customStatusResponse.OK200("Patient deleted");
+            } else {
+                return customStatusResponse.NOTFOUND404("Patient not found");
+            }
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
 }
