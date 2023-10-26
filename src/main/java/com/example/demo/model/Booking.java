@@ -38,6 +38,6 @@ public class Booking {
 	@Column(name = "price")
 	private Double Price;
 	
-	@OneToOne(mappedBy = "booking", fetch = FetchType.LAZY)
-	private Payment payment;
+	@OneToOne(mappedBy = "booking")
+    private Payment payment;
 }
