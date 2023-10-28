@@ -161,6 +161,8 @@ public class Patient {
 	}
 
 	
+	
+
 	public Patient(Integer id, @NotEmpty String phoneNumber, String password, @NotEmpty String fullName, Boolean role,
 			@Email(message = "Email should be email format") String email, String address, Boolean status, Integer rate,
 			Double wallet, String bankingAccount, MedicalRecord medicalRecord) {

@@ -46,7 +46,7 @@ public class Payment {
 		super();
 		this.id = id;
 		this.paymentPhone = paymentPhone;
-		Status = status;
+		this.Status = status;
 		Price = price;
 		this.patientName = patientName;
 		this.booking = booking;

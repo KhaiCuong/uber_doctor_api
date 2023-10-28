@@ -18,7 +18,7 @@ import com.example.demo.response.CustomStatusResponse;
 import com.example.demo.service.PathologycalService;
 
 @RestController
-@RequestMapping("/api/pathologycals")
+@RequestMapping("/api/v1")
 public class PathologycalController {
 
     @Autowired
@@ -26,7 +26,7 @@ public class PathologycalController {
     @Autowired
     private CustomStatusResponse customStatusResponse;
 
-    @GetMapping
+    @GetMapping("/pathologycal/list")
     public ResponseEntity<CustomStatusResponse<List<Pathologycal>>> getAllPathologycals() {
         try {
             List<Pathologycal> pathologycals = pathologycalService.getAllPathologycals();
@@ -39,7 +39,7 @@ public class PathologycalController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/pathologycal/{id}")
     public ResponseEntity<CustomStatusResponse<Pathologycal>> getPathologycalById(@PathVariable Integer id) {
         try {
             Pathologycal pathologycal = pathologycalService.getPathologycalById(id);
@@ -52,7 +52,7 @@ public class PathologycalController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/pathologycal/create")
     public ResponseEntity<CustomStatusResponse<Pathologycal>> createPathologycal(@RequestBody Pathologycal pathologycal) {
         try {
             Pathologycal createdPathologycal = pathologycalService.createPathologycal(pathologycal);
@@ -62,7 +62,7 @@ public class PathologycalController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update-pathologycal/{id}")
     public ResponseEntity<CustomStatusResponse<Pathologycal>> updatePathologycal(@PathVariable Integer id, @RequestBody Pathologycal pathologycal) {
         try {
             Pathologycal updatedPathologycal = pathologycalService.updatePathologycal(id, pathologycal);
@@ -75,7 +75,7 @@ public class PathologycalController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/delete-pathologycal/{id}")
     public ResponseEntity<CustomStatusResponse<?>> deletePathologycal(@PathVariable Integer id) {
         try {
             pathologycalService.deletePathologycal(id);
