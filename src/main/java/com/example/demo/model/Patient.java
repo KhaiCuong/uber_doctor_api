@@ -25,7 +25,6 @@ public class Patient {
 	@Column(name = "phone_number")
 	private String phoneNumber;
 	
-	@NotEmpty
 	@Column(name="password")
 	private String password;
 	
@@ -33,32 +32,25 @@ public class Patient {
 	@Column(name="full_name")
 	private String fullName;
 	
-	@NotNull
 	@Column(name="role")
-	private Boolean role;
+	private Boolean role = false;
 	
-	@NotEmpty
 	@Email(message = "Email should be email format")
-	@Column(name = "email", length = 255, nullable = false)
+	@Column(name = "email", length = 255, nullable = true)
 	private String email;
 	
-	@NotEmpty
 	@Column(name="address")
 	private String Address;
 	
-	@NotNull
 	@Column(name="status")
-	private Boolean Status;
+	private Boolean Status = true;
 	
-	@NotNull
 	@Column(name="rate")
-	private Integer Rate;
+	private Integer Rate = 5;
 	
-	@NotNull
 	@Column(name="wallet")
-	private Double wallet;
+	private Double wallet = 0.0;
 	
-	@NotEmpty(message = "Banking account must not be empty")
 	@Column(name="banking_account")
 	private String bankingAccount;
 	
@@ -153,7 +145,7 @@ public class Patient {
 	}
 
 	public Double getWallet() {
-		return wallet;
+		return wallet ;
 	}
 
 	public void setWallet(Double wallet) {
@@ -168,10 +160,10 @@ public class Patient {
 		this.bankingAccount = bankingAccount;
 	}
 
-	public Patient(Integer id, @NotEmpty String phoneNumber, @NotEmpty String password, @NotEmpty String fullName,
-			@NotNull Boolean role, @NotEmpty @Email(message = "Email should be email format") String email,
-			String address, @NotNull Boolean status, @NotNull Integer rate, @NotNull Double wallet,
-			@NotEmpty String bankingAccount) {
+	
+	public Patient(Integer id, @NotEmpty String phoneNumber, String password, @NotEmpty String fullName, Boolean role,
+			@Email(message = "Email should be email format") String email, String address, Boolean status, Integer rate,
+			Double wallet, String bankingAccount, MedicalRecord medicalRecord) {
 		super();
 		this.id = id;
 		this.phoneNumber = phoneNumber;
@@ -184,8 +176,9 @@ public class Patient {
 		Rate = rate;
 		this.wallet = wallet;
 		this.bankingAccount = bankingAccount;
+		this.medicalRecord = medicalRecord;
 	}
-	
+
 	public Patient() {
 		super();
 	}
