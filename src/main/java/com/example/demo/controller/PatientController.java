@@ -26,7 +26,7 @@ import com.example.demo.service.PatientService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/patients")
+@RequestMapping("/api/v1")
 public class PatientController {
 
     @Autowired
@@ -35,7 +35,7 @@ public class PatientController {
     @Autowired
     private CustomStatusResponse customStatusResponse;
 
-    @GetMapping
+    @GetMapping("/patient/list")
     public ResponseEntity<CustomStatusResponse<List<Patient>>> getAllPatients() {
         try {
             List<Patient> patients = patientService.getAllPatients();
@@ -48,7 +48,7 @@ public class PatientController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/patient/{id}")
     public ResponseEntity<CustomStatusResponse<Patient>> getPatientById(@PathVariable Integer id) {
         try {
             Patient patient = patientService.getPatientById(id);
@@ -61,7 +61,7 @@ public class PatientController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/patient/create")
     public ResponseEntity<CustomStatusResponse<Patient>> createPatient(@RequestBody Patient patient) {
         try {
             Patient createdPatient = patientService.createPatient(patient);
@@ -71,7 +71,7 @@ public class PatientController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update-patient/{id}")
     public ResponseEntity<CustomStatusResponse<Patient>> updatePatient(@PathVariable Integer id, @RequestBody Patient patient) {
         try {
             Patient updatedPatient = patientService.updatePatient(id, patient);
@@ -84,7 +84,7 @@ public class PatientController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/delete-patient/{id}")
     public ResponseEntity<CustomStatusResponse<?>> deletePatient(@PathVariable Integer id) {
         try {
             if (patientService.deletePatient(id)) {

@@ -18,7 +18,7 @@ import com.example.demo.response.CustomStatusResponse;
 import com.example.demo.service.MedicalRecordService;
 
 @RestController
-@RequestMapping("/api/medical-records")
+@RequestMapping("/api/v1")
 public class MedicalRecordController {
     @Autowired
     private MedicalRecordService medicalRecordService;
@@ -26,7 +26,7 @@ public class MedicalRecordController {
     @Autowired
     private CustomStatusResponse customStatusResponse;
 
-    @PostMapping
+    @PostMapping("/medical-record/create")
     public ResponseEntity<CustomStatusResponse<?>> createMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
         try {
             
@@ -39,7 +39,7 @@ public class MedicalRecordController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/medical-record/list")
     public ResponseEntity<CustomStatusResponse<?>> getAllMedicalRecords() {
         try {
             
@@ -52,7 +52,7 @@ public class MedicalRecordController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/medical-record/{id}")
     public ResponseEntity<CustomStatusResponse<?>> getMedicalRecordById(@PathVariable Integer id) {
         try {
             
@@ -70,7 +70,7 @@ public class MedicalRecordController {
         }
     }
     
-    @PutMapping("/{id}")
+    @PutMapping("/update-medical-record/{id}")
     public ResponseEntity<CustomStatusResponse<?>> updateMedicalRecord(@PathVariable Integer id, @RequestBody MedicalRecord medicalRecord) {
         try {
            
@@ -104,7 +104,7 @@ public class MedicalRecordController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/delete-medical-record/{id}")
     public ResponseEntity<CustomStatusResponse<?>> deleteMedicalRecord(@PathVariable Integer id) {
         try {
           
