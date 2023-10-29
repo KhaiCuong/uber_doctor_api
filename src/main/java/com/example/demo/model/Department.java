@@ -21,9 +21,8 @@ import jakarta.validation.constraints.NotNull;
 @Table(name="departments")
 public class Department {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Integer id;
+	private String id;
 	
 	@NotEmpty
 	@Column(name = "department_name")
@@ -33,20 +32,13 @@ public class Department {
 	@Column(name = "description")
 	private String Description;
 	
-	@NotNull
 	@Column(name = "status")
-	private String Status;
+	private Boolean Status = true;
 	
-	@NotEmpty
 	@Column(name = "number_of_doctors")
-	private Integer number_of_Doctors;
+	private Integer number_of_Doctors = 0;
 	
-	@ManyToMany
-    @JoinTable(
-        name = "department_doctor",
-        joinColumns = @JoinColumn(name = "department_id"),
-        inverseJoinColumns = @JoinColumn(name = "doctor_id")
-    )
+	@OneToMany(mappedBy = "departments", fetch = FetchType.LAZY)
     private List<Doctor> doctors;
 	
 	@ManyToMany
@@ -57,8 +49,16 @@ public class Department {
     )
     private List<Pathologycal> pathologycal;
 	
-	public Department(Integer id, @NotEmpty String departmentName, @NotEmpty String description, @NotNull String status,
-			@NotEmpty Integer number_of_Doctors, List<Doctor> doctors) {
+	
+
+	public Department() {
+		super();
+	}
+
+
+
+	public Department(String id, @NotEmpty String departmentName, @NotEmpty String description, Boolean status,
+			Integer number_of_Doctors, List<Doctor> doctors, List<Pathologycal> pathologycal) {
 		super();
 		this.id = id;
 		this.departmentName = departmentName;
@@ -66,15 +66,22 @@ public class Department {
 		Status = status;
 		this.number_of_Doctors = number_of_Doctors;
 		this.doctors = doctors;
+		this.pathologycal = pathologycal;
 	}
 
-	public Integer getId() {
+
+
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+
+
+	public void setId(String id) {
 		this.id = id;
 	}
+
+
 
 	public String getDepartmentName() {
 		return departmentName;
@@ -82,14 +89,6 @@ public class Department {
 
 	public void setDepartmentName(String departmentName) {
 		this.departmentName = departmentName;
-	}
-
-	public List<Pathologycal> getPathologycal() {
-		return pathologycal;
-	}
-
-	public void setPathologycal(List<Pathologycal> pathologycal) {
-		this.pathologycal = pathologycal;
 	}
 
 	public String getDescription() {
@@ -100,11 +99,11 @@ public class Department {
 		Description = description;
 	}
 
-	public String getStatus() {
+	public Boolean getStatus() {
 		return Status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Boolean status) {
 		Status = status;
 	}
 
@@ -124,10 +123,15 @@ public class Department {
 		this.doctors = doctors;
 	}
 
-	public Department(List<Pathologycal> pathologycal) {
-		super();
+	public List<Pathologycal> getPathologycal() {
+		return pathologycal;
+	}
+
+	public void setPathologycal(List<Pathologycal> pathologycal) {
 		this.pathologycal = pathologycal;
 	}
+	
+	
 
 	
 

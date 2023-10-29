@@ -34,6 +34,7 @@ public class PaymentService {
 	    	Optional<Payment> optionalPaymentEntity = paymentRepository.findById(id);
 
 	        if (optionalPaymentEntity.isPresent()) {
+	        	payment.setId(id);
 	        	paymentRepository.save(payment);
 		        return payment;
 

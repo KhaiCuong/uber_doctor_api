@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.model.Patient;
 import com.example.demo.model.Payment;
 import com.example.demo.response.CustomStatusResponse;
 import com.example.demo.service.PaymentService;
@@ -27,7 +27,7 @@ public class PaymentController {
     private CustomStatusResponse customStatusResponse;
     
     
-    
+    @CrossOrigin
     @GetMapping("/payment/list")
     public ResponseEntity<?> getList() {
         try {
@@ -43,8 +43,9 @@ public class PaymentController {
             return customStatusResponse.INTERNALSERVERERROR500(ex.getMessage());
         }
     }
+    @CrossOrigin
     @GetMapping("/payment/{id}")
-    public ResponseEntity<Patient> getPatientById(@PathVariable Integer id) {
+    public ResponseEntity<Payment> getPaymentById(@PathVariable Integer id) {
         try {
             Payment payment = paymentService.getPaymentById(id);
             if (payment == null) {
@@ -57,9 +58,9 @@ public class PaymentController {
             return customStatusResponse.INTERNALSERVERERROR500(ex.getMessage());
         }
     }
-    
+    @CrossOrigin
     @PostMapping("/payment/create")
-    public ResponseEntity<Patient> createPatient(@RequestBody Payment payment) {
+    public ResponseEntity<Payment> createPayment(@RequestBody Payment payment) {
         try {
             Payment createdPayment = paymentService.createPayment(payment);
             if(createdPayment != null) {
@@ -73,9 +74,9 @@ public class PaymentController {
             return customStatusResponse.INTERNALSERVERERROR500(ex.getMessage());
         }
     }
-    
+    @CrossOrigin
     @PutMapping("/update-payment/{id}")
-    public ResponseEntity<Patient> updatePatient(@PathVariable Integer id, @RequestBody Payment payment) {
+    public ResponseEntity<Payment> updatePayment(@PathVariable Integer id, @RequestBody Payment payment) {
         try {
             Payment updatePayment = paymentService.updatePayment(id,payment);
             if (updatePayment != null) {
@@ -90,7 +91,7 @@ public class PaymentController {
         }
     }
 
-    
+    @CrossOrigin
     @GetMapping("/delete-payment/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
         try{
