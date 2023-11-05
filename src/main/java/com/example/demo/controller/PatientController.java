@@ -49,7 +49,7 @@ public class PatientController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
-
+    @CrossOrigin
     @GetMapping("/patient/{id}")
     public ResponseEntity<CustomStatusResponse<Patient>> getPatientById(@PathVariable Integer id) {
         try {
@@ -62,7 +62,7 @@ public class PatientController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
-
+    @CrossOrigin
     @PostMapping("/patient/create")
     public ResponseEntity<CustomStatusResponse<Patient>> createPatient(@RequestBody Patient patient) {
         try {
@@ -72,7 +72,7 @@ public class PatientController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
-
+    @CrossOrigin
     @PutMapping("/update-patient/{id}")
     public ResponseEntity<CustomStatusResponse<Patient>> updatePatient(@PathVariable Integer id, @RequestBody Patient patient) {
         try {
@@ -85,7 +85,7 @@ public class PatientController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
-
+    @CrossOrigin
     @GetMapping("/delete-patient/{id}")
     public ResponseEntity<CustomStatusResponse<?>> deletePatient(@PathVariable Integer id) {
         try {

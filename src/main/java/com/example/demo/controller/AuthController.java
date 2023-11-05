@@ -88,6 +88,7 @@ public class AuthController {
         }
     }
 
+    @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid SignInRequest signInRequest, BindingResult rs) throws Exception {
         try {

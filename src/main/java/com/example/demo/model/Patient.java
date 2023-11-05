@@ -54,8 +54,7 @@ public class Patient {
 	@Column(name="banking_account")
 	private String bankingAccount;
 	
-	@OneToOne
-	@JoinColumn(name = "medical_record_id", referencedColumnName = "id")
+	@OneToOne(mappedBy = "BNpatient" )
 	private MedicalRecord medicalRecord;
 
 	
@@ -64,13 +63,6 @@ public class Patient {
 		this.medicalRecord = medicalRecord;
 	}
 
-	public MedicalRecord getMedicalRecord() {
-		return medicalRecord;
-	}
-
-	public void setMedicalRecord(MedicalRecord medicalRecord) {
-		this.medicalRecord = medicalRecord;
-	}
 
 	public Integer getId() {
 		return id;
@@ -163,6 +155,7 @@ public class Patient {
 	
 	
 
+
 	public Patient(Integer id, @NotEmpty String phoneNumber, String password, @NotEmpty String fullName, Boolean role,
 			@Email(message = "Email should be email format") String email, String address, Boolean status, Integer rate,
 			Double wallet, String bankingAccount, MedicalRecord medicalRecord) {
@@ -180,6 +173,17 @@ public class Patient {
 		this.bankingAccount = bankingAccount;
 		this.medicalRecord = medicalRecord;
 	}
+
+
+	public MedicalRecord getMedicalRecord() {
+		return medicalRecord;
+	}
+
+
+	public void setMedicalRecord(MedicalRecord medicalRecord) {
+		this.medicalRecord = medicalRecord;
+	}
+
 
 	public Patient() {
 		super();
