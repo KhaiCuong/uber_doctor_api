@@ -15,8 +15,7 @@ public class PatientService {
     private PatientRepository patientRepository;
 
     public List<Patient> getAllPatients() {
-//    	Sort.by(Sort.Direction.ASC, "id")
-        return patientRepository.findAll();
+        return patientRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Patient getPatientById(Integer id) {
@@ -37,7 +36,7 @@ public class PatientService {
 
     public boolean deletePatient(Integer id) {
         patientRepository.deleteById(id);
-		return false;
+		return true;
     }
 }
 
