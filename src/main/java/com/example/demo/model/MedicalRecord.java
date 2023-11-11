@@ -23,7 +23,7 @@ public class MedicalRecord {
 	@Column(name = "symptoms")
 	private String Symptoms;
 	
-	@NotEmpty
+	
 	@Column(name="previous_surgeries")
 	private String previousSurgeries;
 	
@@ -31,7 +31,7 @@ public class MedicalRecord {
 	@Column(name="past_illnesses")
 	private String pastIllnesses;
 	
-	@NotNull
+	
 	@Column(name="family_pathologycal")
 	private boolean familyPathologycal;
 	
@@ -39,7 +39,7 @@ public class MedicalRecord {
 	@Column(name="vaccination_history")
 	private String vaccinationHistory;
 	
-	@NotEmpty
+	
 	@Column(name="daily_diet")
 	private String dailyDiet ;
 	
@@ -153,9 +153,9 @@ public class MedicalRecord {
 
 
 
-	public MedicalRecord(Integer id, @NotEmpty String symptoms, @NotEmpty String previousSurgeries,
-			@NotEmpty String pastIllnesses, @NotNull boolean familyPathologycal, @NotEmpty String vaccinationHistory,
-			@NotEmpty String dailyDiet, @NotNull boolean status, @NotEmpty String image, @NotNull Double wallet,
+	public MedicalRecord(Integer id, @NotEmpty String symptoms,  String previousSurgeries,
+			@NotEmpty String pastIllnesses,  boolean familyPathologycal, @NotEmpty String vaccinationHistory,
+			 String dailyDiet, @NotNull boolean status, @NotEmpty String image, @NotNull Double wallet,
 			@NotEmpty String bankingAccount, Patient bNpatient) {
 		super();
 		this.id = id;
