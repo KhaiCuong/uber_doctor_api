@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
@@ -22,7 +23,7 @@ public class MedicalRecord {
 	@Column(name = "symptoms")
 	private String Symptoms;
 	
-	@NotEmpty
+	
 	@Column(name="previous_surgeries")
 	private String previousSurgeries;
 	
@@ -30,7 +31,7 @@ public class MedicalRecord {
 	@Column(name="past_illnesses")
 	private String pastIllnesses;
 	
-	@NotNull
+	
 	@Column(name="family_pathologycal")
 	private boolean familyPathologycal;
 	
@@ -38,7 +39,7 @@ public class MedicalRecord {
 	@Column(name="vaccination_history")
 	private String vaccinationHistory;
 	
-	@NotEmpty
+	
 	@Column(name="daily_diet")
 	private String dailyDiet ;
 	
@@ -58,8 +59,9 @@ public class MedicalRecord {
 	@Column(name="banking_account")
 	private String bankingAccount;
 	
-	@OneToOne(mappedBy = "medicalRecord")
-    private Patient patient;
+	@OneToOne()
+	@JoinColumn(name = "patient_id", referencedColumnName = "id")
+    private Patient BNpatient;
 
 	public Integer getId() {
 		return id;
@@ -149,18 +151,12 @@ public class MedicalRecord {
 		this.bankingAccount = bankingAccount;
 	}
 
-	public Patient getPatient() {
-		return patient;
-	}
 
-	public void setPatient(Patient patient) {
-		this.patient = patient;
-	}
 
-	public MedicalRecord(Integer id, @NotEmpty String symptoms, @NotEmpty String previousSurgeries,
-			@NotEmpty String pastIllnesses, @NotNull boolean familyPathologycal, @NotEmpty String vaccinationHistory,
-			@NotEmpty String dailyDiet, @NotNull boolean status, @NotEmpty String image, @NotNull Double wallet,
-			@NotEmpty String bankingAccount, Patient patient) {
+	public MedicalRecord(Integer id, @NotEmpty String symptoms,  String previousSurgeries,
+			@NotEmpty String pastIllnesses,  boolean familyPathologycal, @NotEmpty String vaccinationHistory,
+			 String dailyDiet, @NotNull boolean status, @NotEmpty String image, @NotNull Double wallet,
+			@NotEmpty String bankingAccount, Patient bNpatient) {
 		super();
 		this.id = id;
 		Symptoms = symptoms;
@@ -173,9 +169,17 @@ public class MedicalRecord {
 		Image = image;
 		Wallet = wallet;
 		this.bankingAccount = bankingAccount;
-		this.patient = patient;
+		BNpatient = bNpatient;
 	}
-	
+
+	public Patient getBNpatient() {
+		return BNpatient;
+	}
+
+	public void setBNpatient(Patient bNpatient) {
+		BNpatient = bNpatient;
+	}
+
 	public MedicalRecord() {
 		super();
 	}
