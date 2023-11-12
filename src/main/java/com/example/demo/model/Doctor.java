@@ -6,8 +6,11 @@ package com.example.demo.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -84,11 +88,14 @@ public class Doctor {
 	@Column(name="banking_account")
 	private String bankingAccount;
 	
+	@JsonIgnoreProperties("doctors")
 	@ManyToOne()
     @JoinColumn(name = "department_id", referencedColumnName = "id")
     private Department departments;
 	
-	
+
+	@OneToMany(mappedBy = "doctors", fetch = FetchType.LAZY)
+    private List<Booking> bookings;
 
 	public Doctor() {
 		super();
@@ -98,7 +105,7 @@ public class Doctor {
 			@NotEmpty @Email(message = "Email should be email format") String email, @NotNull String spectiality,
 			@NotNull @Min(0) Integer exp, @NotEmpty Boolean accepted, @NotEmpty Double price, String address,
 			@NotNull Boolean status, @NotNull Integer rate, @NotNull Double wallet, @NotEmpty String bankingAccount,
-			Department departments) {
+			Department departments, List<Booking> bookings) {
 		super();
 		this.id = id;
 		this.phoneNumber = phoneNumber;
@@ -115,6 +122,7 @@ public class Doctor {
 		this.wallet = wallet;
 		this.bankingAccount = bankingAccount;
 		this.departments = departments;
+		this.bookings = bookings;
 	}
 
 	public Integer getId() {
@@ -236,7 +244,13 @@ public class Doctor {
 	public void setDepartments(Department departments) {
 		this.departments = departments;
 	}
-	
-	
-	
+
+	public List<Booking> getBookings() {
+		return bookings;
+	}
+
+	public void setBookings(List<Booking> bookings) {
+		this.bookings = bookings;
+	}
+
 }
