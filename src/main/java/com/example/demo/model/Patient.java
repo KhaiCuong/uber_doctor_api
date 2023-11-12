@@ -1,12 +1,17 @@
 package com.example.demo.model;
 
+import java.util.List;
+
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -57,136 +62,141 @@ public class Patient {
 	@OneToOne(mappedBy = "BNpatient" )
 	private MedicalRecord medicalRecord;
 
+
+	@OneToMany(mappedBy = "patients", fetch = FetchType.LAZY)
+
+    private List<Booking> bookings;
 	
 	public Patient(MedicalRecord medicalRecord) {
 		super();
 		this.medicalRecord = medicalRecord;
 	}
 
+public Patient() {
+	// TODO Auto-generated constructor stub
+}
 
-	public Integer getId() {
-		return id;
-	}
+public Patient(Integer id, @NotEmpty String phoneNumber, String password, @NotEmpty String fullName, Boolean role,
+		@Email(message = "Email should be email format") String email, String address, Boolean status, Integer rate,
+		Double wallet, String bankingAccount, MedicalRecord medicalRecord, List<Booking> bookings) {
+	super();
+	this.id = id;
+	this.phoneNumber = phoneNumber;
+	this.password = password;
+	this.fullName = fullName;
+	this.role = role;
+	this.email = email;
+	Address = address;
+	Status = status;
+	Rate = rate;
+	this.wallet = wallet;
+	this.bankingAccount = bankingAccount;
+	this.medicalRecord = medicalRecord;
+	this.bookings = bookings;
+}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+public Integer getId() {
+	return id;
+}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+public void setId(Integer id) {
+	this.id = id;
+}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+public String getPhoneNumber() {
+	return phoneNumber;
+}
 
-	public String getPassword() {
-		return password;
-	}
+public void setPhoneNumber(String phoneNumber) {
+	this.phoneNumber = phoneNumber;
+}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+public String getPassword() {
+	return password;
+}
 
-	public String getFullName() {
-		return fullName;
-	}
+public void setPassword(String password) {
+	this.password = password;
+}
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+public String getFullName() {
+	return fullName;
+}
 
-	public Boolean getRole() {
-		return role;
-	}
+public void setFullName(String fullName) {
+	this.fullName = fullName;
+}
 
-	public void setRole(Boolean role) {
-		this.role = role;
-	}
+public Boolean getRole() {
+	return role;
+}
 
-	public String getEmail() {
-		return email;
-	}
+public void setRole(Boolean role) {
+	this.role = role;
+}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+public String getEmail() {
+	return email;
+}
 
-	public String getAddress() {
-		return Address;
-	}
+public void setEmail(String email) {
+	this.email = email;
+}
 
-	public void setAddress(String address) {
-		Address = address;
-	}
+public String getAddress() {
+	return Address;
+}
 
-	public Boolean getStatus() {
-		return Status;
-	}
+public void setAddress(String address) {
+	Address = address;
+}
 
-	public void setStatus(Boolean status) {
-		Status = status;
-	}
+public Boolean getStatus() {
+	return Status;
+}
 
-	public Integer getRate() {
-		return Rate;
-	}
+public void setStatus(Boolean status) {
+	Status = status;
+}
 
-	public void setRate(Integer rate) {
-		Rate = rate;
-	}
+public Integer getRate() {
+	return Rate;
+}
 
-	public Double getWallet() {
-		return wallet ;
-	}
+public void setRate(Integer rate) {
+	Rate = rate;
+}
 
-	public void setWallet(Double wallet) {
-		this.wallet = wallet;
-	}
+public Double getWallet() {
+	return wallet;
+}
 
-	public String getBankingAccount() {
-		return bankingAccount;
-	}
+public void setWallet(Double wallet) {
+	this.wallet = wallet;
+}
 
-	public void setBankingAccount(String bankingAccount) {
-		this.bankingAccount = bankingAccount;
-	}
+public String getBankingAccount() {
+	return bankingAccount;
+}
 
-	
-	
+public void setBankingAccount(String bankingAccount) {
+	this.bankingAccount = bankingAccount;
+}
 
+public MedicalRecord getMedicalRecord() {
+	return medicalRecord;
+}
 
-	public Patient(Integer id, @NotEmpty String phoneNumber, String password, @NotEmpty String fullName, Boolean role,
-			@Email(message = "Email should be email format") String email, String address, Boolean status, Integer rate,
-			Double wallet, String bankingAccount, MedicalRecord medicalRecord) {
-		super();
-		this.id = id;
-		this.phoneNumber = phoneNumber;
-		this.password = password;
-		this.fullName = fullName;
-		this.role = role;
-		this.email = email;
-		Address = address;
-		Status = status;
-		Rate = rate;
-		this.wallet = wallet;
-		this.bankingAccount = bankingAccount;
-		this.medicalRecord = medicalRecord;
-	}
+public void setMedicalRecord(MedicalRecord medicalRecord) {
+	this.medicalRecord = medicalRecord;
+}
 
+public List<Booking> getBookings() {
+	return bookings;
+}
 
-	public MedicalRecord getMedicalRecord() {
-		return medicalRecord;
-	}
+public void setBookings(List<Booking> bookings) {
+	this.bookings = bookings;
+}
 
-
-	public void setMedicalRecord(MedicalRecord medicalRecord) {
-		this.medicalRecord = medicalRecord;
-	}
-
-
-	public Patient() {
-		super();
-	}
-	
 }

@@ -1,0 +1,102 @@
+package com.example.demo.service;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.dtos.BookingDTO;
+import com.example.demo.model.Booking;
+import com.example.demo.repository.BookingRepository;
+
+@Service
+public class BookingService {
+	@Autowired
+	BookingRepository bookingRepository;
+
+	public List<Booking> getAllBookings() {
+		return bookingRepository.findAll();
+	}
+
+	public Booking getBookingById(int id) {
+		Optional<Booking> optionalBookingEntity = bookingRepository.findById(id);
+		if (optionalBookingEntity.isPresent()) {
+			Booking BookingEntity = optionalBookingEntity.get();
+			return BookingEntity;
+		}
+		return null;
+	}
+
+//	public Booking createBooking(Booking booking) {
+//		return bookingRepository.save(booking);
+//	}
+	
+// Booking
+   public Booking bookAppointment(Booking booking) throws Exception {
+//    	 if (!bookingRepository.isAvailable(booking.getAppointmentDate(), booking.getAppointmentTime())) {
+//             throw new Exception("Thời gian đã được lên lịch");
+//         }
+
+        booking.setStatusBooking("Pending");
+        return bookingRepository.save(booking);
+   }
+//update
+	public Booking updateBooking(int id, Booking booking) {
+		Optional<Booking> optionalBookingEntity = bookingRepository.findById(id);
+
+		if (optionalBookingEntity.isPresent()) {
+			booking.setId(id);
+			bookingRepository.save(booking);
+			return booking;
+
+		} else {
+			return null;
+		}
+	}
+
+	public boolean deleteBooking(int id) {
+		Optional<Booking> optionalBookingEntity = bookingRepository.findById(id);
+		if (optionalBookingEntity.isPresent()) {
+			Booking BookingEntity = optionalBookingEntity.get();
+			bookingRepository.delete(BookingEntity);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	// //
+	// // Tạo một cuộc hẹn mới
+    // public BookingDTO createBooking(BookingDTO bookingDTO) {
+    // 	 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
+    // 	    Date date = new Date();  
+    // 	 bookingDTO.setBookingDate(date);
+    //     return this.bookingRepository.save(bookingDTO);
+    // }
+
+    // // Tìm kiếm tất cả các cuộc hẹn
+    // public List<BookingDTO> getAllBookings() {
+    //     return this.bookingRepository.findAll();
+    // }
+
+    // // Tìm kiếm một cuộc hẹn theo ID
+    // public BookingDTO getBookingById(Integer id) {
+    //     return this.bookingRepository.findById(id).orElse(null);
+    // }
+
+    // // Cập nhật một cuộc hẹn
+    // public BookingDTO updateBooking(BookingDTO bookingDTO) {
+    //     return this.bookingRepository.save(bookingDTO);
+    // }
+
+    // // Xóa một cuộc hẹn
+    // public void deleteBooking(Integer id) {
+    //     this.bookingRepository.deleteById(id);
+    // }
+}
