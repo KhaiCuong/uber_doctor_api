@@ -39,30 +39,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RestController
 @RequestMapping("/api/v1")
 public class DoctorController {
-	@Autowired
-	private DoctorService doctorService;
-	// @Autowired
-	// private DoctorImageService doctorImageService;
-	@Autowired
-	private CustomStatusResponse customStatusResponse;
+    @Autowired
+    private DoctorService doctorService;
 
-	private String uploadDirectory = "uploads/";
+    @Autowired
+    private CustomStatusResponse customStatusResponse;
 
-	// Get List Doctors
-	@CrossOrigin
-	@GetMapping("/doctor/list")
-	public ResponseEntity<CustomStatusResponse<List<Doctor>>> getAllDoctors() {
-		try {
-			List<Doctor> doctors = doctorService.getAllDoctors();
-			if (doctors.isEmpty()) {
-				return customStatusResponse.NOTFOUND404("No patients found");
+    private String uploadDirectory = "uploads/";
 
-			}
-			return customStatusResponse.OK200("Patients found", doctors);
-		} catch (Exception e) {
-			return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
-		}
-	}
+    // Get List Doctors
+    @CrossOrigin
+    @GetMapping("/doctor/list")
+    public ResponseEntity<CustomStatusResponse<List<Doctor>>> getAllDoctors() {
+        try {
+            List<Doctor> doctors = doctorService.getAllDoctors();
+            if (doctors.isEmpty()) {
+                return customStatusResponse.NOTFOUND404("No Doctor found");
+
+            }
+            return customStatusResponse.OK200("Get List of Doctor Successfully", doctors);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
+
 
 	// Create Doctor
 
@@ -74,88 +74,78 @@ public class DoctorController {
 				doctorDTO.getPrice(), doctorDTO.getAddress(), doctorDTO.getStatus(), doctorDTO.getRate(),
 				doctorDTO.getWallet(), doctorDTO.getBankingAccount(), imagePath, null);
 		Doctor savedDoctor = doctorService.createDoctor(doctor);
-		return customStatusResponse.OK200("Doctor updated successfully", doctor);
+		return customStatusResponse.OK200("Doctor created successfully", doctor);
 	}
 
-	@PutMapping("/doctor/{id}")
-	public ResponseEntity<Doctor> updateProduct(@PathVariable Long id, @ModelAttribute DoctorDTO doctorDTO)
-			throws Exception {
-		Doctor existingProduct = doctorService.getDoctorById(id);
-		if (existingProduct == null) {
-			return ResponseEntity.notFound().build();
-		}
+    @PutMapping("/doctor/update/{id}")
+    public ResponseEntity<Doctor> updateProduct(@PathVariable Long id, @ModelAttribute DoctorDTO doctorDTO)
+            throws Exception {
+        Doctor existingDoctor = doctorService.getDoctorById(id);
+        if (existingDoctor == null) {
+            return customStatusResponse.NOTFOUND404("No Doctor found");
+        }
 
-		// Kiểm tra xem người dùng đã tải lên ảnh mới hay chưa
-		if (doctorDTO.getImage() != null && !doctorDTO.getImage().isEmpty()) {
-			// Xóa ảnh cũ nếu tồn tại
-			if (existingProduct.getImagePath() != null) {
-				deleteImage(existingProduct.getImagePath());
-			}
+        // Kiểm tra xem người dùng đã tải lên ảnh mới hay chưa
+        if (doctorDTO.getImage() != null && !doctorDTO.getImage().isEmpty()) {
+            // Xóa ảnh cũ nếu tồn tại
+            if (existingDoctor.getImagePath() != null) {
+                deleteImage(existingDoctor.getImagePath());
+            }
 
-			// Lưu trữ ảnh mới và cập nhật đường dẫn hình ảnh
-			String imagePath = storeImage(doctorDTO.getImage());
-			existingProduct.setImagePath(imagePath);
-		}
+            // Lưu trữ ảnh mới và cập nhật đường dẫn hình ảnh
+            String imagePath = storeImage(doctorDTO.getImage());
+            existingDoctor.setImagePath(imagePath);
+        }
 
-		// Cập nhật thông tin sản phẩm (tên và mô tả)
-		existingProduct.setAccepted(doctorDTO.getAccepted());
-		existingProduct.setAddress(doctorDTO.getAddress());
-		existingProduct.setBankingAccount(doctorDTO.getBankingAccount());
-		existingProduct.setEmail(doctorDTO.getEmail());
-		existingProduct.setExp(doctorDTO.getExp());
-		existingProduct.setFullName(doctorDTO.getFullName());
-		existingProduct.setPassword(doctorDTO.getPassword());
-		existingProduct.setPhoneNumber(doctorDTO.getPhoneNumber());
-		existingProduct.setPrice(doctorDTO.getPrice());
-		existingProduct.setSpectiality(doctorDTO.getSpectiality());
-		existingProduct.setStatus(doctorDTO.getStatus());
-		existingProduct.setWallet(doctorDTO.getWallet());
+        // Cập nhật thông tin sản phẩm (tên và mô tả)
+        existingDoctor.setPhoneNumber(doctorDTO.getPhoneNumber());
+        existingDoctor.setPassword(doctorDTO.getPassword());
+        existingDoctor.setFullName(doctorDTO.getFullName());
+        existingDoctor.setEmail(doctorDTO.getEmail());
+        existingDoctor.setSpectiality(doctorDTO.getSpectiality());
+        existingDoctor.setExp(doctorDTO.getExp());
+        existingDoctor.setAccepted(doctorDTO.getAccepted());
+        existingDoctor.setPrice(doctorDTO.getPrice());
+        existingDoctor.setAddress(doctorDTO.getAddress());
+        existingDoctor.setStatus(doctorDTO.getStatus());
+        existingDoctor.setRate(doctorDTO.getRate());
+        existingDoctor.setWallet(doctorDTO.getWallet());
+        existingDoctor.setBankingAccount(doctorDTO.getBankingAccount());
+        existingDoctor.setImagePath(String.valueOf(doctorDTO.getImage()));
 
-		Doctor updatedDoctor = doctorService.updateDoctor(id, existingProduct);
-		return customStatusResponse.OK200("Doctor updated successfully", updatedDoctor);
-	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Doctor> deleteProduct(@PathVariable Long id) {
-		Doctor doctor = doctorService.getDoctorById(id);
-		if (doctor == null) {
-			return ResponseEntity.notFound().build();
-		}
-		var deletedDoctor = doctorService.deleteDoctor(id);
-		if (deletedDoctor != false) {
-			if (doctor.getImagePath() != null) {
-				deleteImage(doctor.getImagePath());
-			}
-			return customStatusResponse.OK200("Doctor deleted successfully", deletedDoctor);
-		}
-		return ResponseEntity.notFound().build();
-	}
-	// GetByID Doctor
 
-	// private String storeImage(MultipartFile image) throws Exception {
-	//
-	// File directory = new File(uploadDirectory);
-	// if (!directory.exists()) {
-	// directory.mkdirs(); // Tạo thư mục nếu chưa tồn tại
-	// }
-	// String fileName = UUID.randomUUID().toString() + image.getOriginalFilename();
-	// /// Lấy dữ liệu đầu vào từ InputStream của hình ảnh và sao chép vào tệp đích
-	// Path destination = Path.of(uploadDirectory, fileName);
-	// Files.copy(image.getInputStream(), destination);
-	// return directory + "/" + fileName;
-	// }
+        Doctor updatedDoctor = doctorService.updateDoctor(id, existingDoctor);
+        return customStatusResponse.OK200("Doctor updated successfully", updatedDoctor);
+    }
 
-	private String storeImage(MultipartFile image) throws Exception {
-		File directory = new File(uploadDirectory);
-		if (!directory.exists()) {
-			directory.mkdirs(); // Tạo thư mục nếu chưa tồn tại
-		}
-		String fileName = UUID.randomUUID().toString() + image.getOriginalFilename();
-		/// Lấy dữ liệu đầu vào từ InputStream của hình ảnh và sao chép vào tệp đích
-		Path destination = Path.of(uploadDirectory, fileName);
-		Files.copy(image.getInputStream(), destination);
-		return directory + "/" + fileName;
-	}
+    @DeleteMapping("/doctor/delete/{id}")
+    public ResponseEntity<Doctor> deleteProduct(@PathVariable Long id) {
+        Doctor doctor = doctorService.getDoctorById(id);
+        if (doctor == null) {
+            return customStatusResponse.NOTFOUND404("No Doctor found");
+        }
+        var deletedDoctor = doctorService.deleteDoctor(id);
+        if (deletedDoctor == true) {
+            if (doctor.getImagePath() != null) {
+                deleteImage(doctor.getImagePath());
+            }
+            return customStatusResponse.OK200("Doctor deleted successfully", deletedDoctor);
+        }
+        return customStatusResponse.NOTFOUND404("No Doctor found");
+    }
+
+    private String storeImage(MultipartFile image) throws Exception {
+        File directory = new File(uploadDirectory);
+        if (!directory.exists()) {
+            directory.mkdirs(); // Tạo thư mục nếu chưa tồn tại
+        }
+        String fileName = UUID.randomUUID().toString() + image.getOriginalFilename();
+        /// Lấy dữ liệu đầu vào từ InputStream của hình ảnh và sao chép vào tệp đích
+        Path destination = Path.of(uploadDirectory, fileName);
+        Files.copy(image.getInputStream(), destination);
+        return directory + "/" + fileName;
+    }
 
 	private void deleteImage(String imageExists) {
 		try {

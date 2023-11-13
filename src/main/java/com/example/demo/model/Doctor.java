@@ -4,6 +4,7 @@ import java.util.List;
 
 // import com.example.demo.model.image.DoctorImage;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,72 +51,23 @@ public class Doctor {
 	@Column(name = "speciality")
 	private String Spectiality;
 
-	public Doctor(Long id, @NotEmpty String phoneNumber, @NotEmpty String password, @NotEmpty String fullName,
-			@NotEmpty @Email(message = "Email should be email format") String email, @NotNull String spectiality,
-			@NotNull @Min(0) Integer exp, @NotEmpty Boolean accepted, @NotEmpty Double price, String address,
-			@NotNull Boolean status, @NotNull Integer rate, @NotNull Double wallet, @NotEmpty String bankingAccount,
-			String imagePath, Department departments) {
-		super();
-		this.id = id;
-		this.phoneNumber = phoneNumber;
-		this.password = password;
-		this.fullName = fullName;
-		this.email = email;
-		Spectiality = spectiality;
-		Exp = exp;
-		Accepted = accepted;
-		Price = price;
-		Address = address;
-		Status = status;
-		Rate = rate;
-		this.wallet = wallet;
-		this.bankingAccount = bankingAccount;
-		this.imagePath = imagePath;
-		this.departments = departments;
-	}
-
-//	public Doctor(Long id, @NotEmpty String phoneNumber, @NotEmpty String password, @NotEmpty String fullName,
-//			@NotEmpty @Email(message = "Email should be email format") String email, @NotNull String spectiality,
-//			@NotNull @Min(0) Integer exp, @NotEmpty Boolean accepted, @NotEmpty Double price, String address,
-//			@NotNull Boolean status, @NotNull Integer rate, @NotNull Double wallet, @NotEmpty String bankingAccount,
-//			String imagePath, Department departments, List<DoctorImage> doctorImages) {
-//		super();
-//		this.id = id;
-//		this.phoneNumber = phoneNumber;
-//		this.password = password;
-//		this.fullName = fullName;
-//		this.email = email;
-//		Spectiality = spectiality;
-//		Exp = exp;
-//		Accepted = accepted;
-//		Price = price;
-//		Address = address;
-//		Status = status;
-//		Rate = rate;
-//		this.wallet = wallet;
-//		this.bankingAccount = bankingAccount;
-//		this.imagePath = imagePath;
-//		this.departments = departments;
-//		this.doctorImages = doctorImages;
-//	}
-
 	@NotNull
 	@Min(0)
 	@Column(name = "exp")
 	private Integer Exp;
 
-	@NotEmpty
+	//@NotEmpty
 	@Column(name = "accepted")
 	private Boolean Accepted;
 
-	@NotEmpty
+//	@NotEmpty
 	@Column(name = "price")
 	private Double Price;
 
 	@Column(name = "address")
 	private String Address;
 
-	@NotNull
+//	@NotNull
 	@Column(name = "status")
 	private Boolean Status;
 
@@ -123,7 +75,7 @@ public class Doctor {
 	@Column(name = "rate")
 	private Integer Rate;
 
-	@NotNull
+//	@NotNull
 	@Column(name = "wallet")
 	private Double wallet;
 
@@ -142,23 +94,12 @@ public class Doctor {
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
-
+	@JsonBackReference
 	@ManyToOne()
 	@JoinColumn(name = "department_id", referencedColumnName = "id")
 	private Department departments;
 
-	
-
-	public Doctor() {
-		super();
-	}
-
-	public Doctor(Long id, @NotEmpty String phoneNumber, @NotEmpty String password, @NotEmpty String fullName,
-			@NotEmpty @Email(message = "Email should be email format") String email, @NotNull String spectiality,
-			@NotNull @Min(0) Integer exp, @NotEmpty Boolean accepted, @NotEmpty Double price, String address,
-			@NotNull Boolean status, @NotNull Integer rate, @NotNull Double wallet, @NotEmpty String bankingAccount,
-			Department departments) {
-		super();
+	public Doctor(Long id, String phoneNumber, String password, String fullName, String email, String spectiality, Integer exp, Boolean accepted, Double price, String address, Boolean status, Integer rate, Double wallet, String bankingAccount, String imagePath, Department departments) {
 		this.id = id;
 		this.phoneNumber = phoneNumber;
 		this.password = password;
@@ -173,7 +114,12 @@ public class Doctor {
 		Rate = rate;
 		this.wallet = wallet;
 		this.bankingAccount = bankingAccount;
+		this.imagePath = imagePath;
 		this.departments = departments;
+	}
+
+	public Doctor() {
+		super();
 	}
 
 	public Long getId() {
