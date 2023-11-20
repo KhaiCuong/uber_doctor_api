@@ -72,7 +72,7 @@ public class DoctorController {
 		Doctor doctor = new Doctor(null, doctorDTO.getPhoneNumber(), doctorDTO.getPassword(), doctorDTO.getFullName(),
 				doctorDTO.getEmail(), doctorDTO.getSpectiality(), doctorDTO.getExp(), doctorDTO.getAccepted(),
 				doctorDTO.getPrice(), doctorDTO.getAddress(), doctorDTO.getStatus(), doctorDTO.getRate(),
-				doctorDTO.getWallet(), doctorDTO.getBankingAccount(), imagePath, null);
+				doctorDTO.getWallet(), doctorDTO.getBankingAccount(),imagePath, null, null);
 		Doctor savedDoctor = doctorService.createDoctor(doctor);
 		return customStatusResponse.OK200("Doctor created successfully", doctor);
 	}

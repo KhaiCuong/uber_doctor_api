@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -32,31 +33,17 @@ public class AuthorSecurityWebConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//        return httpSecurity
-//                .csrf((csrf) -> csrf.disable())
-//                .sessionManagement(sessionManagement -> sessionManagement
-//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests((request) -> request
-////                        .requestMatchers("/auth/**").permitAll()
-//                          .requestMatchers("/api/v1/**").permitAll()
-////                        .requestMatchers("/api/v1/**").authenticated()
-////                          .anyRequest().authenticated()
-//                )
-//                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-//                .build();
-//    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf((csrf) -> csrf.disable())
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests ((request) -> request
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/api/v1/**").authenticated()
-                          .anyRequest().authenticated()
+                .authorizeHttpRequests((request) -> request
+                        .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
+//                        .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).authenticated()
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

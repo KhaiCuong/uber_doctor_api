@@ -2,12 +2,16 @@ package com.example.demo.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 // import com.example.demo.model.image.DoctorImage;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,7 +27,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "doctors")
+@Table(name="doctors")
 public class Doctor {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,54 +37,56 @@ public class Doctor {
 	@NotEmpty
 	@Column(name = "phone_number")
 	private String phoneNumber;
-
+	
 	@NotEmpty
-	@Column(name = "password")
+	@Column(name="password")
 	private String password;
-
+	
 	@NotEmpty
-	@Column(name = "full_name")
+	@Column(name="full_name")
 	private String fullName;
-
+	
+	
 	@NotEmpty
 	@Email(message = "Email should be email format")
 	@Column(name = "email", length = 255, nullable = false)
 	private String email;
-
+	
+	
 	@NotNull
-	@Column(name = "speciality")
+	@Column(name="speciality")
 	private String Spectiality;
-
+	
 	@NotNull
 	@Min(0)
-	@Column(name = "exp")
+	@Column(name="exp")
 	private Integer Exp;
-
-	//@NotEmpty
-	@Column(name = "accepted")
-	private Boolean Accepted;
-
-//	@NotEmpty
-	@Column(name = "price")
-	private Double Price;
-
-	@Column(name = "address")
-	private String Address;
-
-//	@NotNull
-	@Column(name = "status")
-	private Boolean Status;
-
-	@NotNull
-	@Column(name = "rate")
-	private Integer Rate;
-
-//	@NotNull
-	@Column(name = "wallet")
-	private Double wallet;
-
+	
 	@NotEmpty
-	@Column(name = "banking_account")
+	@Column(name="accepted")
+	private Boolean Accepted;
+	
+	@NotEmpty
+	@Column(name="price")
+	private Double Price;
+	
+	@Column(name="address")
+	private String Address;
+	
+	@NotNull
+	@Column(name="status")
+	private Boolean Status;
+	
+	@NotNull
+	@Column(name="rate")
+	private Integer Rate;
+	
+	@NotNull
+	@Column(name="wallet")
+	private Double wallet;
+	
+	@NotEmpty
+	@Column(name="banking_account")
 	private String bankingAccount;
 
 	@NotNull
@@ -99,7 +105,21 @@ public class Doctor {
 	@JoinColumn(name = "department_id", referencedColumnName = "id")
 	private Department departments;
 
-	public Doctor(Long id, String phoneNumber, String password, String fullName, String email, String spectiality, Integer exp, Boolean accepted, Double price, String address, Boolean status, Integer rate, Double wallet, String bankingAccount, String imagePath, Department departments) {
+    @OneToMany(mappedBy = "doctors", fetch = FetchType.LAZY)
+    private List<Booking> bookings;
+
+
+	public Doctor() {
+		super();
+	}
+
+	public Doctor(Long id, @NotEmpty String phoneNumber, @NotEmpty String password, @NotEmpty String fullName,
+			@NotEmpty @Email(message = "Email should be email format") String email, @NotNull String spectiality,
+			@NotNull @Min(0) Integer exp, @NotEmpty Boolean accepted, @NotEmpty Double price, String address,
+			@NotNull Boolean status, @NotNull Integer rate, @NotNull Double wallet, @NotEmpty String bankingAccount,
+			String imagePath,
+			Department departments, List<Booking> bookings) {
+		super();
 		this.id = id;
 		this.phoneNumber = phoneNumber;
 		this.password = password;
@@ -116,10 +136,7 @@ public class Doctor {
 		this.bankingAccount = bankingAccount;
 		this.imagePath = imagePath;
 		this.departments = departments;
-	}
-
-	public Doctor() {
-		super();
+		this.bookings = bookings;
 	}
 
 	public Long getId() {
@@ -242,4 +259,11 @@ public class Doctor {
 		this.departments = departments;
 	}
 
+	public List<Booking> getBookings() {
+		return bookings;
+	}
+
+	public void setBookings(List<Booking> bookings) {
+		this.bookings = bookings;
+	}
 }

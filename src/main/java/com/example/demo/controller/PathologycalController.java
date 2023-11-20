@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ public class PathologycalController {
     @Autowired
     private CustomStatusResponse customStatusResponse;
 
+    @CrossOrigin
     @GetMapping("/pathologycal/list")
     public ResponseEntity<CustomStatusResponse<List<Pathologycal>>> getAllPathologycals() {
         try {
@@ -38,7 +40,7 @@ public class PathologycalController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
-
+    @CrossOrigin
     @GetMapping("/pathologycal/{id}")
     public ResponseEntity<CustomStatusResponse<Pathologycal>> getPathologycalById(@PathVariable Integer id) {
         try {
@@ -51,7 +53,7 @@ public class PathologycalController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
-
+    @CrossOrigin
     @PostMapping("/pathologycal/create")
     public ResponseEntity<CustomStatusResponse<Pathologycal>> createPathologycal(@RequestBody Pathologycal pathologycal) {
         try {
@@ -61,7 +63,7 @@ public class PathologycalController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
-
+    @CrossOrigin
     @PutMapping("/update-pathologycal/{id}")
     public ResponseEntity<CustomStatusResponse<Pathologycal>> updatePathologycal(@PathVariable Integer id, @RequestBody Pathologycal pathologycal) {
         try {
@@ -74,7 +76,7 @@ public class PathologycalController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
-
+    @CrossOrigin
     @GetMapping("/delete-pathologycal/{id}")
     public ResponseEntity<CustomStatusResponse<?>> deletePathologycal(@PathVariable Integer id) {
         try {
