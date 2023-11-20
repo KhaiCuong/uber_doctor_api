@@ -66,11 +66,11 @@ public class Doctor {
 	@Column(name="exp")
 	private Integer Exp;
 	
-	@NotEmpty
+//	@NotEmpty
 	@Column(name="accepted")
 	private Boolean Accepted;
 	
-	@NotEmpty
+//	@NotEmpty
 	@Column(name="price")
 	private Double Price;
 	
