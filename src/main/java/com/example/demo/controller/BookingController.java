@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dtos.BookingDTO;
+// import com.example.demo.dtos.BookingDTO;
 import com.example.demo.model.Booking;
 
 import com.example.demo.response.CustomStatusResponse;
@@ -28,7 +28,7 @@ public class BookingController {
 	@Autowired
 	private CustomStatusResponse customStatusResponse;
 
-	@CrossOrigin
+	@CrossOrigin()
 	@GetMapping("/booking/list")
 	public ResponseEntity<?> getList() {
 		try {
@@ -45,7 +45,7 @@ public class BookingController {
 		}
 	}
 
-	@CrossOrigin
+	@CrossOrigin()
 	@GetMapping("/booking/{id}")
 	public ResponseEntity<Booking> getBookingById(@PathVariable int id) {
 		try {
@@ -61,7 +61,7 @@ public class BookingController {
 		}
 	}
 
-	@CrossOrigin
+	@CrossOrigin()
 	@PostMapping("/booking/create")
 	public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
 		try {
@@ -78,7 +78,7 @@ public class BookingController {
 		}
 	}
 
-	@CrossOrigin
+	@CrossOrigin()
 	@PutMapping("/booking/update/{id}")
 	public ResponseEntity<Booking> updateBooking(@PathVariable int id, @RequestBody Booking booking) {
 		try {
@@ -95,7 +95,7 @@ public class BookingController {
 		}
 	}
 
-	@CrossOrigin
+	@CrossOrigin()
 	@DeleteMapping("/booking/delete/{id}")
 	public ResponseEntity<?> delete(@PathVariable int id) {
 		try {
