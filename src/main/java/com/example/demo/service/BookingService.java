@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -33,20 +34,35 @@ public class BookingService {
 		return null;
 	}
 
-//	public Booking createBooking(Booking booking) {
+
+	// Booking
+	public Booking bookAppointment(Booking booking) throws Exception {
+		Date date = new Date();
+		booking.setBookingDate(date);
+		booking.setStatusBooking("Pending");
+		return bookingRepository.save(booking);
+	}
+
+//	public Booking bookAppointment(Booking booking) throws Exception {
+//		List<Booking> existingBookings = bookingRepository.findAppointmentDateAndAppointmentTimeBetween(
+//				booking.getAppointmentDate(),
+//				booking.getAppointmentTime().minusMinutes(30),
+//				booking.getAppointmentTime().plusMinutes(30)
+//		);
+//		if (!existingBookings.isEmpty()) {
+//			throw new Exception("There is an existing booking within 30 minutes before or after this time.");
+//		}
+//
+//		// Set the booking status to pending
+//		booking.setStatusBooking("Pending");
+//
+//		// Set the booking availability to true
+//		booking.setIsAvailable(true);
+//
+//		// Save the booking to the database
 //		return bookingRepository.save(booking);
 //	}
-	
-// Booking
-   public Booking bookAppointment(Booking booking) throws Exception {
-//    	 if (!bookingRepository.isAvailable(booking.getAppointmentDate(), booking.getAppointmentTime())) {
-//             throw new Exception("Thời gian đã được lên lịch");
-//         }
-
-        booking.setStatusBooking("Pending");
-        return bookingRepository.save(booking);
-   }
-//update
+	// update
 	public Booking updateBooking(int id, Booking booking) {
 		Optional<Booking> optionalBookingEntity = bookingRepository.findById(id);
 
@@ -70,33 +86,33 @@ public class BookingService {
 			return false;
 		}
 	}
-	
+
 	// //
 	// // Tạo một cuộc hẹn mới
-    // public BookingDTO createBooking(BookingDTO bookingDTO) {
-    // 	 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
-    // 	    Date date = new Date();  
-    // 	 bookingDTO.setBookingDate(date);
-    //     return this.bookingRepository.save(bookingDTO);
-    // }
+	// public BookingDTO createBooking(BookingDTO bookingDTO) {
+	// SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	// Date date = new Date();
+	// bookingDTO.setBookingDate(date);
+	// return this.bookingRepository.save(bookingDTO);
+	// }
 
-    // // Tìm kiếm tất cả các cuộc hẹn
-    // public List<BookingDTO> getAllBookings() {
-    //     return this.bookingRepository.findAll();
-    // }
+	// // Tìm kiếm tất cả các cuộc hẹn
+	// public List<BookingDTO> getAllBookings() {
+	// return this.bookingRepository.findAll();
+	// }
 
-    // // Tìm kiếm một cuộc hẹn theo ID
-    // public BookingDTO getBookingById(Integer id) {
-    //     return this.bookingRepository.findById(id).orElse(null);
-    // }
+	// // Tìm kiếm một cuộc hẹn theo ID
+	// public BookingDTO getBookingById(Integer id) {
+	// return this.bookingRepository.findById(id).orElse(null);
+	// }
 
-    // // Cập nhật một cuộc hẹn
-    // public BookingDTO updateBooking(BookingDTO bookingDTO) {
-    //     return this.bookingRepository.save(bookingDTO);
-    // }
+	// // Cập nhật một cuộc hẹn
+	// public BookingDTO updateBooking(BookingDTO bookingDTO) {
+	// return this.bookingRepository.save(bookingDTO);
+	// }
 
-    // // Xóa một cuộc hẹn
-    // public void deleteBooking(Integer id) {
-    //     this.bookingRepository.deleteById(id);
-    // }
+	// // Xóa một cuộc hẹn
+	// public void deleteBooking(Integer id) {
+	// this.bookingRepository.deleteById(id);
+	// }
 }

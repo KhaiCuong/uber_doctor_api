@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dtos.BookingDTO;
+// import com.example.demo.dtos.BookingDTO;
 import com.example.demo.model.Booking;
 
 import com.example.demo.response.CustomStatusResponse;

@@ -111,7 +111,7 @@ public class DoctorController {
         existingDoctor.setRate(doctorDTO.getRate());
         existingDoctor.setWallet(doctorDTO.getWallet());
         existingDoctor.setBankingAccount(doctorDTO.getBankingAccount());
-        existingDoctor.setImagePath(String.valueOf(doctorDTO.getImage()));
+
 
 
 
