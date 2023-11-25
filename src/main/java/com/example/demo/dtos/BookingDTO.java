@@ -32,7 +32,7 @@ public class BookingDTO {
 
 	private Integer patientId;
 
-	private Integer doctorId;
+	private Long doctorId;
 
 	public BookingDTO() {
 	}

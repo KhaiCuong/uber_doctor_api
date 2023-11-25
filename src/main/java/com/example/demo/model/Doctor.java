@@ -1,9 +1,18 @@
 package com.example.demo.model;
 
+
+
+
+
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+// import com.example.demo.model.image.DoctorImage;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,8 +36,8 @@ public class Doctor {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Integer id;
-	
+	private Long id;
+
 	@NotEmpty
 	@Column(name = "phone_number")
 	private String phoneNumber;
@@ -57,11 +66,11 @@ public class Doctor {
 	@Column(name="exp")
 	private Integer Exp;
 	
-	@NotEmpty
+//	@NotEmpty
 	@Column(name="accepted")
 	private Boolean Accepted;
 	
-	@NotEmpty
+//	@NotEmpty
 	@Column(name="price")
 	private Double Price;
 	
@@ -83,24 +92,36 @@ public class Doctor {
 	@NotEmpty
 	@Column(name="banking_account")
 	private String bankingAccount;
-	
-	@JsonIgnoreProperties("doctors")
-	@ManyToOne()
-    @JoinColumn(name = "department_id", referencedColumnName = "id")
-    private Department departments;
-	
 
-	@OneToMany(mappedBy = "doctors", fetch = FetchType.LAZY)
+	@NotNull
+	@Column(name = "imagePath")
+	private String imagePath;
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+	@JsonBackReference
+	@ManyToOne()
+	@JoinColumn(name = "department_id", referencedColumnName = "id")
+	private Department departments;
+
+    @OneToMany(mappedBy = "doctors", fetch = FetchType.LAZY)
     private List<Booking> bookings;
+
 
 	public Doctor() {
 		super();
 	}
 
-	public Doctor(Integer id, @NotEmpty String phoneNumber, @NotEmpty String password, @NotEmpty String fullName,
+	public Doctor(Long id, @NotEmpty String phoneNumber, @NotEmpty String password, @NotEmpty String fullName,
 			@NotEmpty @Email(message = "Email should be email format") String email, @NotNull String spectiality,
 			@NotNull @Min(0) Integer exp, @NotEmpty Boolean accepted, @NotEmpty Double price, String address,
 			@NotNull Boolean status, @NotNull Integer rate, @NotNull Double wallet, @NotEmpty String bankingAccount,
+			String imagePath,
 			Department departments, List<Booking> bookings) {
 		super();
 		this.id = id;
@@ -117,15 +138,16 @@ public class Doctor {
 		Rate = rate;
 		this.wallet = wallet;
 		this.bankingAccount = bankingAccount;
+		this.imagePath = imagePath;
 		this.departments = departments;
 		this.bookings = bookings;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -248,5 +270,4 @@ public class Doctor {
 	public void setBookings(List<Booking> bookings) {
 		this.bookings = bookings;
 	}
-
 }
