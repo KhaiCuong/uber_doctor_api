@@ -13,9 +13,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -25,6 +23,8 @@ import java.util.Timer;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Data
 @Entity
 @Table(name = "payment")
@@ -48,6 +48,9 @@ public class Payment extends BaseEntity {
     @NotEmpty
     @Column(name = "patient_name")
     private String patientName;
+
+    private String message;
+    private String URL;
 
 
     @OneToOne
