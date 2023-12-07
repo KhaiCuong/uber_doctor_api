@@ -50,6 +50,7 @@ public class Patient {
 	@Column(name="status")
 	private Boolean Status = true;
 	
+	
 	@Column(name="rate")
 	private Integer Rate = 5;
 	

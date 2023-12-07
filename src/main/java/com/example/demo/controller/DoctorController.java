@@ -30,11 +30,13 @@ import com.example.demo.dtos.DoctorDTO;
 
 import com.example.demo.model.Doctor;
 import com.example.demo.model.Patient;
-
+import com.example.demo.requests.auth.SignInRequest;
 import com.example.demo.response.CustomStatusResponse;
 import com.example.demo.service.DoctorService;
 // import com.example.demo.service.image.DoctorImageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -58,6 +60,22 @@ public class DoctorController {
 
             }
             return customStatusResponse.OK200("Get List of Doctor Successfully", doctors);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
+    
+    @CrossOrigin
+    @GetMapping("/doctor/check/{phoneNum}")
+    public ResponseEntity<CustomStatusResponse<Boolean>> checkPhoneNumber(@PathVariable String phoneNum) {
+        try {
+        	Doctor doctors = doctorService.getDoctorByPhone(phoneNum);
+        	
+            if (doctors == null) {
+                return customStatusResponse.NOTFOUND404("No telephone number found",false);
+            } else  {
+                return customStatusResponse.OK200("Registered telephone number ", true);
+            }
         } catch (Exception e) {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }

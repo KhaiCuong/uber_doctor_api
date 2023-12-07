@@ -18,6 +18,11 @@ public class DoctorService {
 	public List<Doctor> getAllDoctors() {
 		return doctorRepository.findAll();
 	}
+	
+    public Doctor getDoctorByPhone(String phone) {
+    	  Optional<Doctor> optionalDoctor = doctorRepository.findByPhoneNumber(phone);
+    	    return optionalDoctor.orElse(null);
+    }
 
 	public Doctor createDoctor(Doctor doctor) {
 		return doctorRepository.save(doctor);

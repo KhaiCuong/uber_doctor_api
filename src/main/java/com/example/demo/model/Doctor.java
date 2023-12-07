@@ -92,7 +92,7 @@ public class Doctor {
 	@NotEmpty
 	@Column(name="banking_account")
 	private String bankingAccount;
-
+	
 	@NotNull
 	@Column(name = "imagePath")
 	private String imagePath;
@@ -100,7 +100,6 @@ public class Doctor {
 	public String getImagePath() {
 		return imagePath;
 	}
-
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
