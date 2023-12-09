@@ -11,8 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.demo.model.Patient;
 
 public interface PatientRepository extends JpaRepository<Patient, Integer> {
-    Optional<Patient> findBySesmesterIdAndStudentId(Integer sesmesterId, Integer studentId);
-    List<Patient> findByRoomTypeAndNumberRoomAndSesmesterId(String roomType, Integer numberRoom, Integer semesterId);
-    List<Patient> findByStatus(Integer status);
-    List<Patient> findAll(Sort sort);
+    Optional<Patient> findByPhoneNumber(String phoneNumber);
+    Optional<Patient> findById(Integer id);
+
 }

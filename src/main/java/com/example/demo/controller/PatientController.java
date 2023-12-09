@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.model.Doctor;
 import com.example.demo.model.Patient;
 import com.example.demo.repository.PatientRepository;
 import com.example.demo.response.CustomStatusResponse;
@@ -45,6 +46,21 @@ public class PatientController {
                 return customStatusResponse.NOTFOUND404("No patients found");
             }
             return customStatusResponse.OK200("Patients found", patients);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
+    @CrossOrigin
+    @GetMapping("/patient/check/{phoneNum}")
+    public ResponseEntity<CustomStatusResponse<Boolean>> checkPhoneNumber(@PathVariable String phoneNum) {
+        try {
+        	Patient patient = patientService.getPatientByPhone(phoneNum);
+        	
+            if (patient == null) {
+                return customStatusResponse.NOTFOUND404("No telephone number found",false);
+            } else  {
+                return customStatusResponse.OK200("Registered telephone number ", true);
+            }
         } catch (Exception e) {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }

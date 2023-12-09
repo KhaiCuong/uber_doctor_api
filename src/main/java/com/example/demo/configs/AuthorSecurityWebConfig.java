@@ -4,6 +4,7 @@ import com.example.demo.filters.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -38,12 +39,9 @@ public class AuthorSecurityWebConfig {
         return httpSecurity
                 .csrf((csrf) -> csrf.disable())
                 .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((request) -> request
-                        .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
-//                        .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).authenticated()
-                        .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).permitAll()
-                        .anyRequest().authenticated()
+                    .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

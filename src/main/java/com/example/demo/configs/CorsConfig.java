@@ -14,7 +14,7 @@
 //        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 //        CorsConfiguration config = new CorsConfiguration();
 //        config.setAllowCredentials(true);
-//        config.setAllowedOriginPatterns(Collections.singletonList(""));
+//        config.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000"));
 //        config.addAllowedHeader("");
 //        config.addAllowedMethod("*");
 //        config.setMaxAge(3600L);
@@ -22,3 +22,5 @@
 //        return new CorsFilter(source);
 //    }
 //}
+//
+//

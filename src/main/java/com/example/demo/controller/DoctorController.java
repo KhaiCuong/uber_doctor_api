@@ -30,11 +30,13 @@ import com.example.demo.dtos.DoctorDTO;
 
 import com.example.demo.model.Doctor;
 import com.example.demo.model.Patient;
-
+import com.example.demo.requests.auth.SignInRequest;
 import com.example.demo.response.CustomStatusResponse;
 import com.example.demo.service.DoctorService;
 // import com.example.demo.service.image.DoctorImageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -45,7 +47,7 @@ public class DoctorController {
     @Autowired
     private CustomStatusResponse customStatusResponse;
 
-    private String uploadDirectory = "uploads/";
+    private String uploadDirectory = "src/main/resources/static/uploads/";
 
     // Get List Doctors
     @CrossOrigin
@@ -62,6 +64,22 @@ public class DoctorController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
+    
+    @CrossOrigin
+    @GetMapping("/doctor/check/{phoneNum}")
+    public ResponseEntity<CustomStatusResponse<Boolean>> checkPhoneNumber(@PathVariable String phoneNum) {
+        try {
+        	Doctor doctors = doctorService.getDoctorByPhone(phoneNum);
+        	
+            if (doctors == null) {
+                return customStatusResponse.NOTFOUND404("No telephone number found",false);
+            } else  {
+                return customStatusResponse.OK200("Registered telephone number ", true);
+            }
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
 
 
 	// Create Doctor
@@ -69,10 +87,10 @@ public class DoctorController {
 	@PostMapping("/doctor/create")
 	public ResponseEntity<Doctor> createProduct(@ModelAttribute DoctorDTO doctorDTO) throws Exception {
 		String imagePath = storeImage(doctorDTO.getImage());
-		Doctor doctor = new Doctor(null, doctorDTO.getPhoneNumber(), doctorDTO.getPassword(), doctorDTO.getFullName(),
-				doctorDTO.getEmail(), doctorDTO.getSpectiality(), doctorDTO.getExp(), doctorDTO.getAccepted(),
-				doctorDTO.getPrice(), doctorDTO.getAddress(), doctorDTO.getStatus(), doctorDTO.getRate(),
-				doctorDTO.getWallet(), doctorDTO.getBankingAccount(),imagePath, null, null);
+		Doctor doctor = new Doctor(null, doctorDTO.getPhoneNumber(),null, doctorDTO.getFullName(),
+				doctorDTO.getEmail(), doctorDTO.getSpectiality(), doctorDTO.getExp(), doctorDTO.getAccepted() == null ? false : doctorDTO.getAccepted(),
+				doctorDTO.getPrice(), doctorDTO.getAddress(), doctorDTO.getStatus() == null ? false : doctorDTO.getStatus(),  doctorDTO.getRate() == null ? 5 : doctorDTO.getRate(),
+                doctorDTO.getWallet() == null ? 0 : doctorDTO.getWallet(), doctorDTO.getBankingAccount(), imagePath, null, null);
 		Doctor savedDoctor = doctorService.createDoctor(doctor);
 		return customStatusResponse.OK200("Doctor created successfully", doctor);
 	}
@@ -144,7 +162,7 @@ public class DoctorController {
         /// Lấy dữ liệu đầu vào từ InputStream của hình ảnh và sao chép vào tệp đích
         Path destination = Path.of(uploadDirectory, fileName);
         Files.copy(image.getInputStream(), destination);
-        return directory + "/" + fileName;
+        return  "uploads/" + fileName;
     }
 
 	private void deleteImage(String imageExists) {

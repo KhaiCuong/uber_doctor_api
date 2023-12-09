@@ -25,10 +25,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name="doctors")
@@ -42,7 +39,6 @@ public class Doctor {
 	@Column(name = "phone_number")
 	private String phoneNumber;
 	
-	@NotEmpty
 	@Column(name="password")
 	private String password;
 	
@@ -65,42 +61,36 @@ public class Doctor {
 	@Min(0)
 	@Column(name="exp")
 	private Integer Exp;
-	
-//	@NotEmpty
+
 	@Column(name="accepted")
-	private Boolean Accepted;
-	
-//	@NotEmpty
+	private Boolean Accepted = false;
+
+	@NotNull
+	@DecimalMin("0.1")
 	@Column(name="price")
 	private Double Price;
 	
 	@Column(name="address")
 	private String Address;
 	
-	@NotNull
 	@Column(name="status")
-	private Boolean Status;
+	private Boolean Status = true;
 	
-	@NotNull
 	@Column(name="rate")
-	private Integer Rate;
+	private Integer Rate = 5;
 	
-	@NotNull
 	@Column(name="wallet")
 	private Double wallet;
-	
-	@NotEmpty
+
 	@Column(name="banking_account")
 	private String bankingAccount;
 
-	@NotNull
 	@Column(name = "imagePath")
 	private String imagePath;
 
 	public String getImagePath() {
 		return imagePath;
 	}
-
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
@@ -117,13 +107,7 @@ public class Doctor {
 		super();
 	}
 
-	public Doctor(Long id, @NotEmpty String phoneNumber, @NotEmpty String password, @NotEmpty String fullName,
-			@NotEmpty @Email(message = "Email should be email format") String email, @NotNull String spectiality,
-			@NotNull @Min(0) Integer exp, @NotEmpty Boolean accepted, @NotEmpty Double price, String address,
-			@NotNull Boolean status, @NotNull Integer rate, @NotNull Double wallet, @NotEmpty String bankingAccount,
-			String imagePath,
-			Department departments, List<Booking> bookings) {
-		super();
+	public Doctor(Long id, String phoneNumber, String password, String fullName, String email, String spectiality, Integer exp, Boolean accepted, Double price, String address, Boolean status, Integer rate, Double wallet, String bankingAccount, String imagePath, Department departments, List<Booking> bookings) {
 		this.id = id;
 		this.phoneNumber = phoneNumber;
 		this.password = password;
@@ -131,7 +115,12 @@ public class Doctor {
 		this.email = email;
 		Spectiality = spectiality;
 		Exp = exp;
-		Accepted = accepted;
+		if (Accepted == null) {
+			Accepted = false;
+		} else {
+			Accepted = accepted;
+
+		}
 		Price = price;
 		Address = address;
 		Status = status;
@@ -204,7 +193,12 @@ public class Doctor {
 	}
 
 	public void setAccepted(Boolean accepted) {
-		Accepted = accepted;
+		if (Accepted == null) {
+			Accepted = false;
+		} else {
+			Accepted = accepted;
+
+		}
 	}
 
 	public Double getPrice() {
