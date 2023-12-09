@@ -3,6 +3,8 @@ package com.example.demo.model;
 import java.util.List;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -61,11 +63,13 @@ public class Patient {
 	private String bankingAccount;
 	
 	@OneToOne(mappedBy = "BNpatient" )
+	@JsonIgnore
 	private MedicalRecord medicalRecord;
 
 
-	@OneToMany(mappedBy = "patients", fetch = FetchType.LAZY)
 
+	@OneToMany(mappedBy = "patients", fetch = FetchType.LAZY)
+	@JsonIgnore
     private List<Booking> bookings;
 	
 	public Patient(MedicalRecord medicalRecord) {

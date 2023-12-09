@@ -69,6 +69,7 @@ public class Booking {
 	@JsonIgnoreProperties("bookings")
 	@ManyToOne()
 	@JoinColumn(name = "patient_id", referencedColumnName = "id")
+	
 	private Patient patients;
 
 	@JsonIgnoreProperties("bookings")

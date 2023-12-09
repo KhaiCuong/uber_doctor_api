@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import java.util.Optional;
@@ -27,6 +28,8 @@ public class PaymentService {
 	    }
 
 	    public Payment createPayment(Payment payment) {
+//			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+//			System.out.println(currentTime.toString());
 	        return paymentRepository.save(payment);
 	    }
 
@@ -34,7 +37,7 @@ public class PaymentService {
 	    	Optional<Payment> optionalPaymentEntity = paymentRepository.findById(id);
 
 	        if (optionalPaymentEntity.isPresent()) {
-	        	payment.setId(id);
+	        	payment.setId(id.longValue());
 	        	paymentRepository.save(payment);
 		        return payment;
 

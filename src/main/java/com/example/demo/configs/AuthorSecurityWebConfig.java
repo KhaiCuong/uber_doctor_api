@@ -39,11 +39,9 @@ public class AuthorSecurityWebConfig {
         return httpSecurity
                 .csrf((csrf) -> csrf.disable())
                 .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((request) -> request
                     .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
-//                        .requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll()
-//                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
