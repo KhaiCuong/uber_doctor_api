@@ -86,15 +86,28 @@ public class DoctorController {
 
 	@PostMapping("/doctor/create")
 	public ResponseEntity<Doctor> createProduct(@ModelAttribute DoctorDTO doctorDTO) throws Exception {
-		String imagePath = storeImage(doctorDTO.getImage());
+        String imagePath = "";
+
+        if (doctorDTO.getImage() != null) {
+            imagePath = storeImage(doctorDTO.getImage());
+        }
 		Doctor doctor = new Doctor(null, doctorDTO.getPhoneNumber(),null, doctorDTO.getFullName(),
 				doctorDTO.getEmail(), doctorDTO.getSpectiality(), doctorDTO.getExp(), doctorDTO.getAccepted() == null ? false : doctorDTO.getAccepted(),
 				doctorDTO.getPrice(), doctorDTO.getAddress(), doctorDTO.getStatus() == null ? false : doctorDTO.getStatus(),  doctorDTO.getRate() == null ? 5 : doctorDTO.getRate(),
-                doctorDTO.getWallet() == null ? 0 : doctorDTO.getWallet(), doctorDTO.getBankingAccount(), imagePath, null, null);
+                doctorDTO.getWallet() == null ? 0 : doctorDTO.getWallet(), doctorDTO.getBankingAccount(), imagePath == null ? "" : imagePath,doctorDTO.getDepartment_id() , null);
 		Doctor savedDoctor = doctorService.createDoctor(doctor);
 		return customStatusResponse.OK200("Doctor created successfully", doctor);
 	}
-
+    @CrossOrigin
+    @PostMapping("/doctor/createjson")
+    public ResponseEntity<CustomStatusResponse<Doctor>> createDoctor(@RequestBody Doctor doctor) {
+        try {
+            Doctor savedDoctor = doctorService.createDoctor(doctor);
+            return  customStatusResponse.OK200("Doctor created successfully", doctor);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
     @PutMapping("/doctor/update/{id}")
     public ResponseEntity<Doctor> updateProduct(@PathVariable Long id, @ModelAttribute DoctorDTO doctorDTO)
             throws Exception {

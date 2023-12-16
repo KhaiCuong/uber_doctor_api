@@ -1,5 +1,6 @@
 package com.example.demo.dtos;
 
+import com.example.demo.model.Department;
 import jakarta.mail.Multipart;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,5 +20,6 @@ public class DoctorDTO{
     private Integer Rate;
     private Double wallet;
     private String bankingAccount;
+    private Department department_id;
 
 }
