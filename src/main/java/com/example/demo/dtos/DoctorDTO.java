@@ -19,5 +19,5 @@ public class DoctorDTO{
     private Integer Rate;
     private Double wallet;
     private String bankingAccount;
-
+    private String description;
 }

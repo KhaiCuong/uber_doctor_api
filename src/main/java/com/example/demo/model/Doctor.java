@@ -85,6 +85,17 @@ public class Doctor {
 	@Column(name="banking_account")
 	private String bankingAccount;
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Column(name="description")
+	private String description;
+
 	@Column(name = "imagePath")
 	private String imagePath;
 
@@ -107,7 +118,7 @@ public class Doctor {
 		super();
 	}
 
-	public Doctor(Long id, String phoneNumber, String password, String fullName, String email, String spectiality, Integer exp, Boolean accepted, Double price, String address, Boolean status, Integer rate, Double wallet, String bankingAccount, String imagePath, Department departments, List<Booking> bookings) {
+	public Doctor(Long id, String phoneNumber, String password, String fullName, String email, String spectiality, Integer exp, Boolean accepted, Double price, String address, Boolean status, Integer rate, Double wallet, String bankingAccount,String description , String imagePath, Department departments, List<Booking> bookings) {
 		this.id = id;
 		this.phoneNumber = phoneNumber;
 		this.password = password;
@@ -127,6 +138,7 @@ public class Doctor {
 		Rate = rate;
 		this.wallet = wallet;
 		this.bankingAccount = bankingAccount;
+		this.description = description;
 		this.imagePath = imagePath;
 		this.departments = departments;
 		this.bookings = bookings;
