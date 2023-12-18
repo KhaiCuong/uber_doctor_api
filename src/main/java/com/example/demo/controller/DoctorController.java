@@ -94,7 +94,7 @@ public class DoctorController {
 		Doctor doctor = new Doctor(null, doctorDTO.getPhoneNumber(),null, doctorDTO.getFullName(),
 				doctorDTO.getEmail(), doctorDTO.getSpectiality(), doctorDTO.getExp(), doctorDTO.getAccepted() == null ? false : doctorDTO.getAccepted(),
 				doctorDTO.getPrice(), doctorDTO.getAddress(), doctorDTO.getStatus() == null ? false : doctorDTO.getStatus(),  doctorDTO.getRate() == null ? 5 : doctorDTO.getRate(),
-                doctorDTO.getWallet() == null ? 0 : doctorDTO.getWallet(), doctorDTO.getBankingAccount(), imagePath == null ? "" : imagePath,doctorDTO.getDepartment_id() , null);
+                doctorDTO.getWallet() == null ? 0 : doctorDTO.getWallet(), doctorDTO.getBankingAccount(), doctorDTO.getDescription(), imagePath, null, null);
 		Doctor savedDoctor = doctorService.createDoctor(doctor);
 		return customStatusResponse.OK200("Doctor created successfully", doctor);
 	}
@@ -142,7 +142,7 @@ public class DoctorController {
         existingDoctor.setRate(doctorDTO.getRate());
         existingDoctor.setWallet(doctorDTO.getWallet());
         existingDoctor.setBankingAccount(doctorDTO.getBankingAccount());
-
+        existingDoctor.setDescription(doctorDTO.getDescription());
 
 
 
