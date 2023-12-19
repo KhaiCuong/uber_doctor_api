@@ -39,7 +39,7 @@ public class BookingService {
 	public Booking bookAppointment(Booking booking) throws Exception {
 		Date date = new Date();
 		booking.setBookingDate(date);
-		booking.setStatusBooking("pending");
+		booking.setStatusBooking("upcoming");
 		return bookingRepository.save(booking);
 	}
 
