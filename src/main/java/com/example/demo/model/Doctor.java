@@ -26,6 +26,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.*;
+import org.hibernate.annotations.SortNatural;
 
 @Entity
 @Table(name="doctors")
@@ -63,7 +64,7 @@ public class Doctor {
 	private Integer Exp;
 
 	@Column(name="accepted")
-	private Boolean Accepted = false;
+	private Boolean Accepted;
 
 	@NotNull
 	@DecimalMin("0.1")

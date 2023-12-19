@@ -7,10 +7,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.print.Doc;
 
+import com.example.demo.model.Department;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -67,15 +69,28 @@ public class DoctorController {
     
     @CrossOrigin
     @GetMapping("/doctor/check/{phoneNum}")
-    public ResponseEntity<CustomStatusResponse<Boolean>> checkPhoneNumber(@PathVariable String phoneNum) {
+    public ResponseEntity<CustomStatusResponse<Long>> checkPhoneNumber(@PathVariable String phoneNum) {
         try {
         	Doctor doctors = doctorService.getDoctorByPhone(phoneNum);
-        	
             if (doctors == null) {
-                return customStatusResponse.NOTFOUND404("No telephone number found",false);
+                return customStatusResponse.NOTFOUND404("No telephone number found",-1);
             } else  {
-                return customStatusResponse.OK200("Registered telephone number ", true);
+                return customStatusResponse.OK200("Registered telephone number ", doctors.getId());
             }
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/doctor/{id}")
+    public ResponseEntity<CustomStatusResponse<Doctor>> getDoctorById(@PathVariable Long id) {
+        try {
+            Doctor doctor = doctorService.getDoctorById(id);
+            if (doctor == null) {
+                return customStatusResponse.NOTFOUND404("Doctor not found");
+            }
+            return customStatusResponse.OK200("Doctor found", doctor);
         } catch (Exception e) {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
@@ -108,6 +123,7 @@ public class DoctorController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
+    @CrossOrigin
     @PutMapping("/doctor/update/{id}")
     public ResponseEntity<Doctor> updateProduct(@PathVariable Long id, @ModelAttribute DoctorDTO doctorDTO)
             throws Exception {
@@ -148,6 +164,29 @@ public class DoctorController {
 
         Doctor updatedDoctor = doctorService.updateDoctor(id, existingDoctor);
         return customStatusResponse.OK200("Doctor updated successfully", updatedDoctor);
+    }
+
+    @CrossOrigin
+    @PutMapping("/accept-doctor/{id}")
+    public ResponseEntity<Doctor> acceptDoctor(@PathVariable Long id) {
+        try {
+            Doctor doctor = doctorService.getDoctorById(id);
+            if (doctor == null) {
+                return customStatusResponse.NOTFOUND404("No Doctor found");
+            } else {
+                doctor.setAccepted(true);
+            }
+            Doctor updateDoctor = doctorService.updateDoctor(id, doctor);
+            if (updateDoctor != null) {
+                return customStatusResponse.OK200("Get success", doctor);
+            } else {
+                return customStatusResponse.NOTFOUND404("list not found");
+            }
+
+        } catch (Exception ex) {
+
+            return customStatusResponse.INTERNALSERVERERROR500(ex.getMessage());
+        }
     }
 
     @DeleteMapping("/doctor/delete/{id}")

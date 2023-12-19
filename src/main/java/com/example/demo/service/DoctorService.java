@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Doctor;
@@ -16,9 +17,9 @@ public class DoctorService {
 	DoctorRepository doctorRepository;
 
 	public List<Doctor> getAllDoctors() {
-		return doctorRepository.findAll();
+		return doctorRepository.findAllSortedByAccepted();
 	}
-	
+
     public Doctor getDoctorByPhone(String phone) {
     	  Optional<Doctor> optionalDoctor = doctorRepository.findByPhoneNumber(phone);
     	    return optionalDoctor.orElse(null);
