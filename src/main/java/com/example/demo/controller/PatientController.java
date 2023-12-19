@@ -52,14 +52,14 @@ public class PatientController {
     }
     @CrossOrigin
     @GetMapping("/patient/check/{phoneNum}")
-    public ResponseEntity<CustomStatusResponse<Boolean>> checkPhoneNumber(@PathVariable String phoneNum) {
+    public ResponseEntity<CustomStatusResponse<Long>> checkPhoneNumber(@PathVariable String phoneNum) {
         try {
         	Patient patient = patientService.getPatientByPhone(phoneNum);
         	
             if (patient == null) {
-                return customStatusResponse.NOTFOUND404("No telephone number found",false);
+                return customStatusResponse.NOTFOUND404("No telephone number found",-1);
             } else  {
-                return customStatusResponse.OK200("Registered telephone number ", true);
+                return customStatusResponse.OK200("Registered telephone number ", patient.getId());
             }
         } catch (Exception e) {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
