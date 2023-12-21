@@ -98,7 +98,7 @@ public class DoctorController {
 
 
 	// Create Doctor
-
+    @CrossOrigin
 	@PostMapping("/doctor/create")
 	public ResponseEntity<Doctor> createProduct(@ModelAttribute DoctorDTO doctorDTO) throws Exception {
         String imagePath = "";
@@ -109,7 +109,7 @@ public class DoctorController {
 		Doctor doctor = new Doctor(null, doctorDTO.getPhoneNumber(),null, doctorDTO.getFullName(),
 				doctorDTO.getEmail(), doctorDTO.getSpectiality(), doctorDTO.getExp(), doctorDTO.getAccepted() == null ? false : doctorDTO.getAccepted(),
 				doctorDTO.getPrice(), doctorDTO.getAddress(), doctorDTO.getStatus() == null ? false : doctorDTO.getStatus(),  doctorDTO.getRate() == null ? 5 : doctorDTO.getRate(),
-                doctorDTO.getWallet() == null ? 0 : doctorDTO.getWallet(), doctorDTO.getBankingAccount(), doctorDTO.getDescription(), imagePath, null, null);
+                doctorDTO.getWallet() == null ? 0 : doctorDTO.getWallet(), doctorDTO.getBankingAccount(), doctorDTO.getDescription(), imagePath == null ? "" : imagePath,doctorDTO.getDepartment_id() , null);
 		Doctor savedDoctor = doctorService.createDoctor(doctor);
 		return customStatusResponse.OK200("Doctor created successfully", doctor);
 	}
@@ -117,8 +117,13 @@ public class DoctorController {
     @PostMapping("/doctor/createjson")
     public ResponseEntity<CustomStatusResponse<Doctor>> createDoctor(@RequestBody Doctor doctor) {
         try {
+
             Doctor savedDoctor = doctorService.createDoctor(doctor);
-            return  customStatusResponse.OK200("Doctor created successfully", doctor);
+            if (savedDoctor !=  null) {
+                return  customStatusResponse.OK200("Doctor created successfully", savedDoctor);
+            }
+            return  customStatusResponse.BADREQUEST400("Doctor created FAIL", savedDoctor);
+
         } catch (Exception e) {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
@@ -159,7 +164,10 @@ public class DoctorController {
         existingDoctor.setWallet(doctorDTO.getWallet());
         existingDoctor.setBankingAccount(doctorDTO.getBankingAccount());
         existingDoctor.setDescription(doctorDTO.getDescription());
+        if(doctorDTO.getDepartment_id() != null) {
+            existingDoctor.setDepartments(doctorDTO.getDepartment_id());
 
+        }
 
 
         Doctor updatedDoctor = doctorService.updateDoctor(id, existingDoctor);

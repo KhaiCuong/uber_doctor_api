@@ -7,6 +7,7 @@ package com.example.demo.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 // import com.example.demo.model.image.DoctorImage;
@@ -106,7 +107,8 @@ public class Doctor {
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
-	@JsonBackReference
+//	@JsonBackReference
+	@JsonIgnore
 	@ManyToOne()
 	@JoinColumn(name = "department_id", referencedColumnName = "id")
 	private Department departments;
@@ -114,12 +116,7 @@ public class Doctor {
     @OneToMany(mappedBy = "doctors", fetch = FetchType.LAZY)
     private List<Booking> bookings;
 
-
-	public Doctor() {
-		super();
-	}
-
-	public Doctor(Long id, String phoneNumber, String password, String fullName, String email, String spectiality, Integer exp, Boolean accepted, Double price, String address, Boolean status, Integer rate, Double wallet, String bankingAccount,String description , String imagePath, Department departments, List<Booking> bookings) {
+	public Doctor(Long id, String phoneNumber, String password, String fullName, String email, String spectiality, Integer exp, Boolean accepted, Double price, String address, Boolean status, Integer rate, Double wallet, String bankingAccount, String description, String imagePath, Department departments, List<Booking> bookings) {
 		this.id = id;
 		this.phoneNumber = phoneNumber;
 		this.password = password;
@@ -127,12 +124,7 @@ public class Doctor {
 		this.email = email;
 		Spectiality = spectiality;
 		Exp = exp;
-		if (Accepted == null) {
-			Accepted = false;
-		} else {
-			Accepted = accepted;
-
-		}
+		Accepted = accepted;
 		Price = price;
 		Address = address;
 		Status = status;
@@ -143,6 +135,10 @@ public class Doctor {
 		this.imagePath = imagePath;
 		this.departments = departments;
 		this.bookings = bookings;
+	}
+
+	public Doctor() {
+		super();
 	}
 
 	public Long getId() {
@@ -206,12 +202,7 @@ public class Doctor {
 	}
 
 	public void setAccepted(Boolean accepted) {
-		if (Accepted == null) {
-			Accepted = false;
-		} else {
-			Accepted = accepted;
-
-		}
+		Accepted = accepted;
 	}
 
 	public Double getPrice() {
