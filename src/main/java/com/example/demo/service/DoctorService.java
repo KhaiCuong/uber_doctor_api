@@ -26,7 +26,8 @@ public class DoctorService {
     }
 
 	public Doctor createDoctor(Doctor doctor) {
-		return doctorRepository.save(doctor);
+		Doctor createDoctor = doctorRepository.save(doctor);
+		return createDoctor;
 	}
 
 	public Doctor getDoctorById(Long id) {
