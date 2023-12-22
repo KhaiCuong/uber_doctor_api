@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 @Data
 public class DoctorDTO{
+    private Long Id;
     private MultipartFile image;
     private String phoneNumber;
     private String password;

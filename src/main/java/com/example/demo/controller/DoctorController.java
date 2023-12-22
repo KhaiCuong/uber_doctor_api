@@ -15,17 +15,7 @@ import javax.print.Doc;
 import com.example.demo.model.Department;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dtos.DoctorDTO;
@@ -102,22 +92,25 @@ public class DoctorController {
 	@PostMapping("/doctor/create")
 	public ResponseEntity<Doctor> createProduct(@ModelAttribute DoctorDTO doctorDTO) throws Exception {
         String imagePath = "";
-
-        if (doctorDTO.getImage() != null) {
-            imagePath = storeImage(doctorDTO.getImage());
+        try{
+            if (doctorDTO.getImage() != null) {
+                imagePath = storeImage(doctorDTO.getImage());
+            }
+            Doctor doctor = new Doctor(null, doctorDTO.getPhoneNumber(),null, doctorDTO.getFullName(),
+                    doctorDTO.getEmail(), doctorDTO.getSpectiality(), doctorDTO.getExp(), doctorDTO.getAccepted() == null ? false : doctorDTO.getAccepted(),
+                    doctorDTO.getPrice(), doctorDTO.getAddress(), doctorDTO.getStatus() == null ? false : doctorDTO.getStatus(),  doctorDTO.getRate() == null ? 5 : doctorDTO.getRate(),
+                    doctorDTO.getWallet() == null ? 0 : doctorDTO.getWallet(), doctorDTO.getBankingAccount(), doctorDTO.getDescription(), imagePath == null ? "" : imagePath,doctorDTO.getDepartment_id() , null);
+            Doctor savedDoctor = doctorService.createDoctor(doctor);
+            return customStatusResponse.OK200("Doctor created successfully", doctor);
+        }catch(Exception e){
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
-		Doctor doctor = new Doctor(null, doctorDTO.getPhoneNumber(),null, doctorDTO.getFullName(),
-				doctorDTO.getEmail(), doctorDTO.getSpectiality(), doctorDTO.getExp(), doctorDTO.getAccepted() == null ? false : doctorDTO.getAccepted(),
-				doctorDTO.getPrice(), doctorDTO.getAddress(), doctorDTO.getStatus() == null ? false : doctorDTO.getStatus(),  doctorDTO.getRate() == null ? 5 : doctorDTO.getRate(),
-                doctorDTO.getWallet() == null ? 0 : doctorDTO.getWallet(), doctorDTO.getBankingAccount(), doctorDTO.getDescription(), imagePath == null ? "" : imagePath,doctorDTO.getDepartment_id() , null);
-		Doctor savedDoctor = doctorService.createDoctor(doctor);
-		return customStatusResponse.OK200("Doctor created successfully", doctor);
 	}
     @CrossOrigin
     @PostMapping("/doctor/createjson")
     public ResponseEntity<CustomStatusResponse<Doctor>> createDoctor(@RequestBody Doctor doctor) {
         try {
-
+            doctor.setWallet(0.0);
             Doctor savedDoctor = doctorService.createDoctor(doctor);
             if (savedDoctor !=  null) {
                 return  customStatusResponse.OK200("Doctor created successfully", savedDoctor);
@@ -128,51 +121,57 @@ public class DoctorController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
-    @CrossOrigin
-    @PutMapping("/doctor/update/{id}")
-    public ResponseEntity<Doctor> updateProduct(@PathVariable Long id, @ModelAttribute DoctorDTO doctorDTO)
-            throws Exception {
-        Doctor existingDoctor = doctorService.getDoctorById(id);
-        if (existingDoctor == null) {
-            return customStatusResponse.NOTFOUND404("No Doctor found");
-        }
 
-        // Kiểm tra xem người dùng đã tải lên ảnh mới hay chưa
-        if (doctorDTO.getImage() != null && !doctorDTO.getImage().isEmpty()) {
-            // Xóa ảnh cũ nếu tồn tại
-            if (existingDoctor.getImagePath() != null) {
-                deleteImage(existingDoctor.getImagePath());
+    @CrossOrigin
+    @PostMapping("/doctor/update/{id}")
+//    public ResponseEntity<Doctor> updateProduct(@RequestParam Long id, @RequestParam String fullName, @RequestParam String password, @RequestParam String phoneNumber, @RequestParam String email, @RequestParam String spectiality, @RequestParam int exp, @RequestParam String address, @RequestParam double price, @RequestPart MultipartFile image, @RequestParam boolean accepted, @RequestParam boolean status, @RequestParam int rate, @RequestParam double wallet, @RequestParam  @RequestParam String description)
+    public ResponseEntity<Doctor> updateProduct(@PathVariable String id, @RequestParam String fullName, @RequestPart MultipartFile image, @RequestParam String phoneNumber, @RequestParam String email, @RequestParam String spectiality, @RequestParam String price, @RequestParam String exp)
+            throws Exception {
+        try{
+            Doctor existingDoctor = doctorService.getDoctorById(Long.parseLong(id));
+            if (existingDoctor == null) {
+                return customStatusResponse.NOTFOUND404("No Doctor found");
             }
 
-            // Lưu trữ ảnh mới và cập nhật đường dẫn hình ảnh
-            String imagePath = storeImage(doctorDTO.getImage());
-            existingDoctor.setImagePath(imagePath);
+            // Kiểm tra xem người dùng đã tải lên ảnh mới hay chưa
+            if (image != null && !image.isEmpty()) {
+                // Xóa ảnh cũ nếu tồn tại
+                if (existingDoctor.getImagePath() != null) {
+                    deleteImage(existingDoctor.getImagePath());
+                }
+
+                // Lưu trữ ảnh mới và cập nhật đường dẫn hình ảnh
+                String imagePath = storeImage(image);
+                existingDoctor.setImagePath(imagePath);
+            }
+
+            // Cập nhật thông tin sản phẩm (tên và mô tả)
+            existingDoctor.setId(Long.parseLong(id));
+            existingDoctor.setPhoneNumber(phoneNumber);
+//            existingDoctor.setPassword(password);
+            existingDoctor.setFullName(fullName);
+            existingDoctor.setEmail(email);
+            existingDoctor.setSpectiality(spectiality);
+            existingDoctor.setExp(Integer.parseInt(exp));
+//            existingDoctor.setAccepted(accepted);
+            existingDoctor.setPrice(Double.parseDouble(price));
+//            existingDoctor.setAddress(address);
+//            existingDoctor.setStatus(status);
+//            existingDoctor.setRate(rate);
+//            existingDoctor.setWallet(wallet);
+//            existingDoctor.setBankingAccount(bankingAccount);
+//            existingDoctor.setDescription(description);
+
+
+
+            Doctor updatedDoctor = doctorService.updateDoctor(Long.parseLong(id), existingDoctor);
+            return customStatusResponse.OK200("Doctor updated successfully", updatedDoctor);
+        }catch (Exception ex){
+            return customStatusResponse.INTERNALSERVERERROR500(ex.getMessage());
         }
 
-        // Cập nhật thông tin sản phẩm (tên và mô tả)
-        existingDoctor.setPhoneNumber(doctorDTO.getPhoneNumber());
-        existingDoctor.setPassword(doctorDTO.getPassword());
-        existingDoctor.setFullName(doctorDTO.getFullName());
-        existingDoctor.setEmail(doctorDTO.getEmail());
-        existingDoctor.setSpectiality(doctorDTO.getSpectiality());
-        existingDoctor.setExp(doctorDTO.getExp());
-        existingDoctor.setAccepted(doctorDTO.getAccepted());
-        existingDoctor.setPrice(doctorDTO.getPrice());
-        existingDoctor.setAddress(doctorDTO.getAddress());
-        existingDoctor.setStatus(doctorDTO.getStatus());
-        existingDoctor.setRate(doctorDTO.getRate());
-        existingDoctor.setWallet(doctorDTO.getWallet());
-        existingDoctor.setBankingAccount(doctorDTO.getBankingAccount());
-        existingDoctor.setDescription(doctorDTO.getDescription());
-        if(doctorDTO.getDepartment_id() != null) {
-            existingDoctor.setDepartments(doctorDTO.getDepartment_id());
-
-        }
-
-
-        Doctor updatedDoctor = doctorService.updateDoctor(id, existingDoctor);
-        return customStatusResponse.OK200("Doctor updated successfully", updatedDoctor);
     }
+
 
     @CrossOrigin
     @PutMapping("/accept-doctor/{id}")
@@ -199,18 +198,23 @@ public class DoctorController {
 
     @DeleteMapping("/doctor/delete/{id}")
     public ResponseEntity<Doctor> deleteProduct(@PathVariable Long id) {
-        Doctor doctor = doctorService.getDoctorById(id);
-        if (doctor == null) {
-            return customStatusResponse.NOTFOUND404("No Doctor found");
-        }
-        var deletedDoctor = doctorService.deleteDoctor(id);
-        if (deletedDoctor == true) {
-            if (doctor.getImagePath() != null) {
-                deleteImage(doctor.getImagePath());
+        try{
+            Doctor doctor = doctorService.getDoctorById(id);
+            if (doctor == null) {
+                return customStatusResponse.NOTFOUND404("No Doctor found");
             }
-            return customStatusResponse.OK200("Doctor deleted successfully", deletedDoctor);
+            var deletedDoctor = doctorService.deleteDoctor(id);
+            if (deletedDoctor == true) {
+                if (doctor.getImagePath() != null) {
+                    deleteImage(doctor.getImagePath());
+                }
+                return customStatusResponse.OK200("Doctor deleted successfully", deletedDoctor);
+            }
+            return customStatusResponse.NOTFOUND404("No Doctor found");
+        }catch (Exception ex){
+            return customStatusResponse.INTERNALSERVERERROR500(ex.getMessage());
         }
-        return customStatusResponse.NOTFOUND404("No Doctor found");
+
     }
 
     private String storeImage(MultipartFile image) throws Exception {
