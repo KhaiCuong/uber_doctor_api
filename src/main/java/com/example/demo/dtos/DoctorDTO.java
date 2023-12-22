@@ -22,4 +22,5 @@ public class DoctorDTO{
     private Double wallet;
     private String bankingAccount;
     private String description;
+    private Department department_id;
 }

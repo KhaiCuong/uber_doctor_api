@@ -62,7 +62,6 @@ public class DoctorController {
     public ResponseEntity<CustomStatusResponse<Long>> checkPhoneNumber(@PathVariable String phoneNum) {
         try {
         	Doctor doctors = doctorService.getDoctorByPhone(phoneNum);
-        	
             if (doctors == null) {
                 return customStatusResponse.NOTFOUND404("No telephone number found",-1);
             } else  {
@@ -89,26 +88,23 @@ public class DoctorController {
 
 
 	// Create Doctor
-
     @CrossOrigin
 	@PostMapping("/doctor/create")
 	public ResponseEntity<Doctor> createProduct(@ModelAttribute DoctorDTO doctorDTO) throws Exception {
         String imagePath = "";
-        try {
+        try{
             if (doctorDTO.getImage() != null) {
                 imagePath = storeImage(doctorDTO.getImage());
             }
             Doctor doctor = new Doctor(null, doctorDTO.getPhoneNumber(),null, doctorDTO.getFullName(),
                     doctorDTO.getEmail(), doctorDTO.getSpectiality(), doctorDTO.getExp(), doctorDTO.getAccepted() == null ? false : doctorDTO.getAccepted(),
                     doctorDTO.getPrice(), doctorDTO.getAddress(), doctorDTO.getStatus() == null ? false : doctorDTO.getStatus(),  doctorDTO.getRate() == null ? 5 : doctorDTO.getRate(),
-                    doctorDTO.getWallet() == null ? 0 : doctorDTO.getWallet(), doctorDTO.getBankingAccount(), doctorDTO.getDescription(), imagePath, null, null);
+                    doctorDTO.getWallet() == null ? 0 : doctorDTO.getWallet(), doctorDTO.getBankingAccount(), doctorDTO.getDescription(), imagePath == null ? "" : imagePath,doctorDTO.getDepartment_id() , null);
             Doctor savedDoctor = doctorService.createDoctor(doctor);
             return customStatusResponse.OK200("Doctor created successfully", doctor);
         }catch(Exception e){
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
-
-
 	}
     @CrossOrigin
     @PostMapping("/doctor/createjson")
@@ -116,8 +112,11 @@ public class DoctorController {
         try {
             doctor.setWallet(0.0);
             Doctor savedDoctor = doctorService.createDoctor(doctor);
+            if (savedDoctor !=  null) {
+                return  customStatusResponse.OK200("Doctor created successfully", savedDoctor);
+            }
+            return  customStatusResponse.BADREQUEST400("Doctor created FAIL", savedDoctor);
 
-            return  customStatusResponse.OK200("Doctor created successfully", doctor);
         } catch (Exception e) {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
@@ -135,7 +134,7 @@ public class DoctorController {
             }
 
             // Kiểm tra xem người dùng đã tải lên ảnh mới hay chưa
-            if (existingDoctor.getImagePath() != null && !existingDoctor.getImagePath().isEmpty()) {
+            if (image != null && !image.isEmpty()) {
                 // Xóa ảnh cũ nếu tồn tại
                 if (existingDoctor.getImagePath() != null) {
                     deleteImage(existingDoctor.getImagePath());

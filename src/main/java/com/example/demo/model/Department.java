@@ -3,6 +3,7 @@ package com.example.demo.model;
 import java.util.List;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -28,7 +29,7 @@ public class Department {
 
 	@Column(name = "number_of_doctors")
 	private Integer number_of_Doctors = 0;
-	@JsonManagedReference
+//	@JsonManagedReference
 	@OneToMany(mappedBy = "departments", fetch = FetchType.LAZY)
     private List<Doctor> doctors;
 
