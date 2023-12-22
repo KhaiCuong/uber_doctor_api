@@ -4,20 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.example.demo.dtos.PatientDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.model.Doctor;
 import com.example.demo.model.Patient;
@@ -52,14 +45,14 @@ public class PatientController {
     }
     @CrossOrigin
     @GetMapping("/patient/check/{phoneNum}")
-    public ResponseEntity<CustomStatusResponse<Boolean>> checkPhoneNumber(@PathVariable String phoneNum) {
+    public ResponseEntity<CustomStatusResponse<Long>> checkPhoneNumber(@PathVariable String phoneNum) {
         try {
         	Patient patient = patientService.getPatientByPhone(phoneNum);
         	
             if (patient == null) {
-                return customStatusResponse.NOTFOUND404("No telephone number found",false);
+                return customStatusResponse.NOTFOUND404("No telephone number found",-1);
             } else  {
-                return customStatusResponse.OK200("Registered telephone number ", true);
+                return customStatusResponse.OK200("Registered telephone number ", patient.getId());
             }
         } catch (Exception e) {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
@@ -109,6 +102,27 @@ public class PatientController {
                 return customStatusResponse.OK200("Patient deleted");
             } else {
                 return customStatusResponse.NOTFOUND404("Patient not found");
+            }
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/patient/update")
+//    public ResponseEntity<CustomStatusResponse<Patient>> updatePatient(@PathVariable Integer id, @RequestParam String fullName, @RequestParam String email, @RequestParam String phoneNumber) {
+    public ResponseEntity<CustomStatusResponse<Patient>> updatedPatient(@RequestBody PatientDTO updatePatient) {
+        try {
+            Patient existingPatient = patientService.getPatientById(updatePatient.getId());
+            if(existingPatient == null){
+                return customStatusResponse.NOTFOUND404("Patient not found");
+            }else {
+                existingPatient.setId(updatePatient.getId());
+                existingPatient.setFullName(updatePatient.getFullName());
+                existingPatient.setEmail(updatePatient.getEmail());
+                existingPatient.setPhoneNumber(updatePatient.getPhoneNumber());
+                existingPatient = patientService.updatePatient(updatePatient.getId(), existingPatient);
+                return customStatusResponse.OK200("Patient updated successfully", existingPatient);
             }
         } catch (Exception e) {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());

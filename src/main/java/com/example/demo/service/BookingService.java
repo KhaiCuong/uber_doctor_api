@@ -40,6 +40,7 @@ public class BookingService {
 		Date date = new Date();
 		booking.setBookingDate(date);
 		booking.setStatusBooking("upcoming");
+		booking.setIsAvailable(true);
 		return bookingRepository.save(booking);
 	}
 

@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.print.Doc;
@@ -14,17 +15,7 @@ import javax.print.Doc;
 import com.example.demo.model.Department;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dtos.DoctorDTO;
@@ -48,7 +39,7 @@ public class DoctorController {
     @Autowired
     private CustomStatusResponse customStatusResponse;
 
-    private String uploadDirectory = "src/main/resources/static/uploads";
+    private String uploadDirectory = "src/main/resources/static/uploads/";
 
     // Get List Doctors
     @CrossOrigin
@@ -68,15 +59,29 @@ public class DoctorController {
     
     @CrossOrigin
     @GetMapping("/doctor/check/{phoneNum}")
-    public ResponseEntity<CustomStatusResponse<Boolean>> checkPhoneNumber(@PathVariable String phoneNum) {
+    public ResponseEntity<CustomStatusResponse<Long>> checkPhoneNumber(@PathVariable String phoneNum) {
         try {
         	Doctor doctors = doctorService.getDoctorByPhone(phoneNum);
         	
             if (doctors == null) {
-                return customStatusResponse.NOTFOUND404("No telephone number found",false);
+                return customStatusResponse.NOTFOUND404("No telephone number found",-1);
             } else  {
-                return customStatusResponse.OK200("Registered telephone number ", true);
+                return customStatusResponse.OK200("Registered telephone number ", doctors.getId());
             }
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/doctor/{id}")
+    public ResponseEntity<CustomStatusResponse<Doctor>> getDoctorById(@PathVariable Long id) {
+        try {
+            Doctor doctor = doctorService.getDoctorById(id);
+            if (doctor == null) {
+                return customStatusResponse.NOTFOUND404("Doctor not found");
+            }
+            return customStatusResponse.OK200("Doctor found", doctor);
         } catch (Exception e) {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
@@ -119,63 +124,48 @@ public class DoctorController {
     }
 
     @CrossOrigin
-    @GetMapping("/doctor/{id}")
-    public ResponseEntity<Doctor> getDoctorById(@PathVariable Long id) {
-        try {
-            Doctor doctor = doctorService.getDoctorById(id);
-            if (doctor == null) {
-                return customStatusResponse.NOTFOUND404("doctor not found");
-            } else {
-                return customStatusResponse.OK200("Get successfully", doctor);
-            }
-        } catch (Exception ex) {
-
-            return customStatusResponse.INTERNALSERVERERROR500(ex.getMessage());
-        }
-    }
-
-    @CrossOrigin
-    @PutMapping("/doctor/update/{id}")
-    public ResponseEntity<Doctor> updateProduct(@PathVariable Long id, @ModelAttribute DoctorDTO doctorDTO)
+    @PostMapping("/doctor/update/{id}")
+//    public ResponseEntity<Doctor> updateProduct(@RequestParam Long id, @RequestParam String fullName, @RequestParam String password, @RequestParam String phoneNumber, @RequestParam String email, @RequestParam String spectiality, @RequestParam int exp, @RequestParam String address, @RequestParam double price, @RequestPart MultipartFile image, @RequestParam boolean accepted, @RequestParam boolean status, @RequestParam int rate, @RequestParam double wallet, @RequestParam  @RequestParam String description)
+    public ResponseEntity<Doctor> updateProduct(@PathVariable String id, @RequestParam String fullName, @RequestPart MultipartFile image, @RequestParam String phoneNumber, @RequestParam String email, @RequestParam String spectiality, @RequestParam String price, @RequestParam String exp)
             throws Exception {
         try{
-            Doctor existingDoctor = doctorService.getDoctorById(id);
+            Doctor existingDoctor = doctorService.getDoctorById(Long.parseLong(id));
             if (existingDoctor == null) {
                 return customStatusResponse.NOTFOUND404("No Doctor found");
             }
 
             // Kiểm tra xem người dùng đã tải lên ảnh mới hay chưa
-            if (doctorDTO.getImage() != null && !doctorDTO.getImage().isEmpty()) {
+            if (existingDoctor.getImagePath() != null && !existingDoctor.getImagePath().isEmpty()) {
                 // Xóa ảnh cũ nếu tồn tại
                 if (existingDoctor.getImagePath() != null) {
                     deleteImage(existingDoctor.getImagePath());
                 }
 
                 // Lưu trữ ảnh mới và cập nhật đường dẫn hình ảnh
-                String imagePath = storeImage(doctorDTO.getImage());
+                String imagePath = storeImage(image);
                 existingDoctor.setImagePath(imagePath);
             }
 
             // Cập nhật thông tin sản phẩm (tên và mô tả)
-            existingDoctor.setId(existingDoctor.getId());
-            existingDoctor.setPhoneNumber(doctorDTO.getPhoneNumber());
-            existingDoctor.setPassword(doctorDTO.getPassword());
-            existingDoctor.setFullName(doctorDTO.getFullName());
-            existingDoctor.setEmail(doctorDTO.getEmail());
-            existingDoctor.setSpectiality(doctorDTO.getSpectiality());
-            existingDoctor.setExp(doctorDTO.getExp());
-            existingDoctor.setAccepted(doctorDTO.getAccepted());
-            existingDoctor.setPrice(doctorDTO.getPrice());
-            existingDoctor.setAddress(doctorDTO.getAddress());
-            existingDoctor.setStatus(doctorDTO.getStatus());
-            existingDoctor.setRate(doctorDTO.getRate());
-            existingDoctor.setWallet(doctorDTO.getWallet());
-            existingDoctor.setBankingAccount(doctorDTO.getBankingAccount());
-            existingDoctor.setDescription(doctorDTO.getDescription());
+            existingDoctor.setId(Long.parseLong(id));
+            existingDoctor.setPhoneNumber(phoneNumber);
+//            existingDoctor.setPassword(password);
+            existingDoctor.setFullName(fullName);
+            existingDoctor.setEmail(email);
+            existingDoctor.setSpectiality(spectiality);
+            existingDoctor.setExp(Integer.parseInt(exp));
+//            existingDoctor.setAccepted(accepted);
+            existingDoctor.setPrice(Double.parseDouble(price));
+//            existingDoctor.setAddress(address);
+//            existingDoctor.setStatus(status);
+//            existingDoctor.setRate(rate);
+//            existingDoctor.setWallet(wallet);
+//            existingDoctor.setBankingAccount(bankingAccount);
+//            existingDoctor.setDescription(description);
 
 
 
-            Doctor updatedDoctor = doctorService.updateDoctor(id, existingDoctor);
+            Doctor updatedDoctor = doctorService.updateDoctor(Long.parseLong(id), existingDoctor);
             return customStatusResponse.OK200("Doctor updated successfully", updatedDoctor);
         }catch (Exception ex){
             return customStatusResponse.INTERNALSERVERERROR500(ex.getMessage());
@@ -183,7 +173,30 @@ public class DoctorController {
 
     }
 
+
     @CrossOrigin
+    @PutMapping("/accept-doctor/{id}")
+    public ResponseEntity<Doctor> acceptDoctor(@PathVariable Long id) {
+        try {
+            Doctor doctor = doctorService.getDoctorById(id);
+            if (doctor == null) {
+                return customStatusResponse.NOTFOUND404("No Doctor found");
+            } else {
+                doctor.setAccepted(true);
+            }
+            Doctor updateDoctor = doctorService.updateDoctor(id, doctor);
+            if (updateDoctor != null) {
+                return customStatusResponse.OK200("Get success", doctor);
+            } else {
+                return customStatusResponse.NOTFOUND404("list not found");
+            }
+
+        } catch (Exception ex) {
+
+            return customStatusResponse.INTERNALSERVERERROR500(ex.getMessage());
+        }
+    }
+
     @DeleteMapping("/doctor/delete/{id}")
     public ResponseEntity<Doctor> deleteProduct(@PathVariable Long id) {
         try{

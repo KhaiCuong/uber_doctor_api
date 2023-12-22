@@ -28,7 +28,7 @@ public class Patient {
 	@Column(name = "id")
 	private Integer id;
 	
-	@NotEmpty
+//	@NotEmpty
 	@Column(name = "phone_number")
 	private String phoneNumber;
 	
