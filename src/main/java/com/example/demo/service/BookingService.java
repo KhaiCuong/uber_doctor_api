@@ -12,7 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dtos.BookingDTO;
+
 import com.example.demo.model.Booking;
 import com.example.demo.repository.BookingRepository;
 
@@ -39,7 +39,7 @@ public class BookingService {
 	public Booking bookAppointment(Booking booking) throws Exception {
 		Date date = new Date();
 		booking.setBookingDate(date);
-		booking.setStatusBooking("upcoming");
+		booking.setStatusBooking("pending");
 		booking.setIsAvailable(true);
 		return bookingRepository.save(booking);
 	}
