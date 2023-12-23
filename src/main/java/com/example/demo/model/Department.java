@@ -29,7 +29,7 @@ public class Department {
 
 	@Column(name = "number_of_doctors")
 	private Integer number_of_Doctors = 0;
-//	@JsonManagedReference
+	@JsonManagedReference
 	@OneToMany(mappedBy = "departments", fetch = FetchType.LAZY)
     private List<Doctor> doctors;
 

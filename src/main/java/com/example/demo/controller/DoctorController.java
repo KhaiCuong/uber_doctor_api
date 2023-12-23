@@ -66,6 +66,21 @@ public class DoctorController {
             return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
         }
     }
+
+    @CrossOrigin
+    @GetMapping("/doctor/listnotify")
+    public ResponseEntity<CustomStatusResponse<List<Doctor>>> getnewDoctors() {
+        try {
+            List<Doctor> doctors = doctorService.getLatestDoctos();
+            if (doctors.isEmpty()) {
+                return customStatusResponse.NOTFOUND404("No Doctor found");
+
+            }
+            return customStatusResponse.OK200("Get List of Doctor Successfully", doctors);
+        } catch (Exception e) {
+            return customStatusResponse.INTERNALSERVERERROR500(e.getMessage());
+        }
+    }
     
     @CrossOrigin
     @GetMapping("/doctor/check/{phoneNum}")
@@ -117,7 +132,9 @@ public class DoctorController {
     @PostMapping("/doctor/createjson")
     public ResponseEntity<CustomStatusResponse<Doctor>> createDoctor(@RequestBody Doctor doctor) {
         try {
-
+            if(doctor.getAccepted()== null ) {
+                doctor.setAccepted(false);
+            }
             Doctor savedDoctor = doctorService.createDoctor(doctor);
             if (savedDoctor !=  null) {
                 return  customStatusResponse.OK200("Doctor created successfully", savedDoctor);
@@ -196,6 +213,7 @@ public class DoctorController {
             return customStatusResponse.INTERNALSERVERERROR500(ex.getMessage());
         }
     }
+    @CrossOrigin
 
     @DeleteMapping("/doctor/delete/{id}")
     public ResponseEntity<Doctor> deleteProduct(@PathVariable Long id) {
@@ -212,7 +230,7 @@ public class DoctorController {
         }
         return customStatusResponse.NOTFOUND404("No Doctor found");
     }
-
+    @CrossOrigin
     private String storeImage(MultipartFile image) throws Exception {
         File directory = new File(uploadDirectory);
         if (!directory.exists()) {
@@ -224,7 +242,7 @@ public class DoctorController {
         Files.copy(image.getInputStream(), destination);
         return  "uploads/" + fileName;
     }
-
+    @CrossOrigin
 	private void deleteImage(String imageExists) {
 		try {
 			Path imageToDelete = Paths.get(imageExists);

@@ -107,8 +107,8 @@ public class Doctor {
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
-//	@JsonBackReference
-	@JsonIgnore
+//	@JsonIgnore
+	@JsonBackReference
 	@ManyToOne()
 	@JoinColumn(name = "department_id", referencedColumnName = "id")
 	private Department departments;

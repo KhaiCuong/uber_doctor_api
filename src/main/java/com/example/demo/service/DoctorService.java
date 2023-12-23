@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -28,6 +29,11 @@ public class DoctorService {
 	public Doctor createDoctor(Doctor doctor) {
 		Doctor createDoctor = doctorRepository.save(doctor);
 		return createDoctor;
+	}
+
+	public List<Doctor> getLatestDoctos() {
+		List<Doctor> allDoctors = doctorRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+		return allDoctors.stream().limit(5).collect(Collectors.toList());
 	}
 
 	public Doctor getDoctorById(Long id) {
